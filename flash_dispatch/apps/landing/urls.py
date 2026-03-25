@@ -9,4 +9,5 @@ urlpatterns = [
     path('services/', views.services, name='services'),
     path('contact/', views.contact, name='contact'),
     path('rates/', views.rates, name='rates'),
+    path('api/calculate-rate/', views.calculate_shipping_rate, name='calculate_rate'),
 ]
