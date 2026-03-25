@@ -144,3 +144,25 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
+
+import os
+from decouple import config
+
+# Email Configuration for Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='your-email@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='your-app-password')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='Flash Dispatch <noreply@gmail.com>')
+CONTACT_EMAIL = config('CONTACT_EMAIL', default='your-email@gmail.com')
+
+# For development, you can use console backend to test without sending real emails
+if DEBUG:
+    # Set to True to see emails in console instead of sending
+    USE_CONSOLE_EMAIL = False  # Change to True for testing without sending
+    
+    if USE_CONSOLE_EMAIL:
+        EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

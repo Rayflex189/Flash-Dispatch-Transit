@@ -2,17 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
-
-def home(request):
-    return render(request, 'landing/home.html')
-
-def about(request):
-    return render(request, 'landing/about.html')
-
-def services(request):
-    return render(request, 'landing/services.html')
+from django.template.loader import render_to_string
+from datetime import datetime
 
 def contact(request):
     if request.method == 'POST':
@@ -23,10 +16,23 @@ def contact(request):
         message = request.POST.get('message')
         newsletter = request.POST.get('newsletter')
         
-        # Send email notification
         try:
+            # Prepare email content
             email_subject = f"Contact Form: {subject} - from {name}"
-            email_body = f"""
+            
+            # HTML email template
+            html_message = render_to_string('emails/contact_notification.html', {
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'subject': subject,
+                'message': message,
+                'newsletter': newsletter,
+                'date': datetime.now()
+            })
+            
+            # Plain text version (fallback)
+            plain_message = f"""
             Name: {name}
             Email: {email}
             Phone: {phone}
@@ -36,45 +42,56 @@ def contact(request):
             {message}
             
             Newsletter Subscription: {'Yes' if newsletter else 'No'}
+            Submitted: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             """
             
-            send_mail(
+            # Send to admin/contact email
+            admin_email = EmailMessage(
                 email_subject,
-                email_body,
+                html_message,
                 settings.DEFAULT_FROM_EMAIL,
                 [settings.CONTACT_EMAIL],
-                fail_silently=False,
+                reply_to=[email]
             )
+            admin_email.content_subtype = "html"
+            admin_email.send(fail_silently=False)
             
             # Auto-respond to user
             if email:
-                auto_response = f"""
-                Dear {name},
+                user_html_message = render_to_string('emails/auto_response.html', {
+                    'name': name,
+                    'subject': subject,
+                    'date': datetime.now()
+                })
                 
-                Thank you for contacting Flash Dispatch. We have received your message and will get back to you within 24 hours.
-                
-                Your inquiry about: {subject}
-                
-                Best regards,
-                Flash Dispatch Support Team
-                """
-                
-                send_mail(
+                user_email = EmailMessage(
                     "Thank you for contacting Flash Dispatch",
-                    auto_response,
+                    user_html_message,
                     settings.DEFAULT_FROM_EMAIL,
-                    [email],
-                    fail_silently=True,
+                    [email]
                 )
+                user_email.content_subtype = "html"
+                user_email.send(fail_silently=False)
             
             messages.success(request, 'Thank you for your message! We\'ll get back to you soon.')
+            
         except Exception as e:
+            # Log the error
+            print(f"Email error: {e}")
             messages.error(request, 'There was an error sending your message. Please try again or call us directly.')
         
         return redirect('landing:contact')
     
     return render(request, 'landing/contact.html')
 
+def home(request):
+    return render(request, 'landing/home.html')
+
+def about(request):
+    return render(request, 'landing/about.html')
+
+def services(request):
+    return render(request, 'landing/services.html')
 
 def rates(request):
     return render(request, 'landing/rates.html')
