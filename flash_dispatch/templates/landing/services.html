@@ -1,0 +1,461 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Services - Professional Courier & Logistics{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-r from-blue-600 to-blue-800 py-20">
+    <div class="absolute inset-0 bg-black opacity-50"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center text-white max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Services</h1>
+            <p class="text-xl text-blue-100 mb-8">Comprehensive logistics solutions tailored to your business needs</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#express" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    Explore Services
+                </a>
+                <a href="{% url 'dashboard:create_shipment' %}" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+                    Create Shipment
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Services Section -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <!-- Section Header -->
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">What We Offer</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Choose from our wide range of courier and logistics services</p>
+        </div>
+
+        <!-- Service Categories -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Express Delivery -->
+            <div id="express" class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-bolt text-3xl"></i>
+                        </div>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">Most Popular</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mt-4">Express Delivery</h3>
+                    <p class="text-blue-100 mt-2">Lightning-fast delivery for urgent shipments</p>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Same-day delivery within city limits
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Next-day delivery nationwide
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Real-time GPS tracking
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Priority handling and support
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Delivery confirmation with photo
+                        </li>
+                    </ul>
+                    <div class="border-t pt-4">
+                        <p class="text-2xl font-bold text-blue-600 mb-4">From $29.99</p>
+                        <a href="{% url 'dashboard:create_shipment' %}" class="block text-center bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Freight Shipping -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-ship text-3xl"></i>
+                        </div>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">Business</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mt-4">Freight Shipping</h3>
+                    <p class="text-green-100 mt-2">Bulk shipping for commercial needs</p>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Full container load (FCL)
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Less than container load (LCL)
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Air, sea, and road freight
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Customs clearance assistance
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Insurance coverage available
+                        </li>
+                    </ul>
+                    <div class="border-t pt-4">
+                        <p class="text-2xl font-bold text-green-600 mb-4">Custom Pricing</p>
+                        <a href="{% url 'landing:contact' %}" class="block text-center bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+                            Contact Sales
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warehousing -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-warehouse text-3xl"></i>
+                        </div>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">Storage</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mt-4">Warehousing</h3>
+                    <p class="text-purple-100 mt-2">Secure storage and inventory management</p>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Climate-controlled storage
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            24/7 security monitoring
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Real-time inventory tracking
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Pick and pack services
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Flexible storage terms
+                        </li>
+                    </ul>
+                    <div class="border-t pt-4">
+                        <p class="text-2xl font-bold text-purple-600 mb-4">From $199/mo</p>
+                        <a href="{% url 'landing:contact' %}" class="block text-center bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- International Shipping -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-globe text-3xl"></i>
+                        </div>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">Global</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mt-4">International Shipping</h3>
+                    <p class="text-orange-100 mt-2">Worldwide delivery to 100+ countries</p>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Door-to-door delivery
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Customs brokerage services
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            International tracking
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Duty and tax calculation
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Multilingual support
+                        </li>
+                    </ul>
+                    <div class="border-t pt-4">
+                        <p class="text-2xl font-bold text-orange-600 mb-4">From $49.99</p>
+                        <a href="{% url 'dashboard:create_shipment' %}" class="block text-center bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition font-semibold">
+                            Ship Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supply Chain Solutions -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                <div class="bg-gradient-to-r from-teal-500 to-teal-600 p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-chart-line text-3xl"></i>
+                        </div>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">Enterprise</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mt-4">Supply Chain</h3>
+                    <p class="text-teal-100 mt-2">End-to-end logistics management</p>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Inventory optimization
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Demand forecasting
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Route optimization
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Analytics dashboard
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Dedicated account manager
+                        </li>
+                    </ul>
+                    <div class="border-t pt-4">
+                        <p class="text-2xl font-bold text-teal-600 mb-4">Custom Quote</p>
+                        <a href="{% url 'landing:contact' %}" class="block text-center bg-teal-600 text-white py-3 rounded-lg hover:bg-teal-700 transition font-semibold">
+                            Get Quote
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Services -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-gem text-3xl"></i>
+                        </div>
+                        <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">Premium</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mt-4">Special Services</h3>
+                    <p class="text-red-100 mt-2">Handling special and high-value items</p>
+                </div>
+                <div class="p-6">
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Temperature-controlled shipping
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Hazardous materials handling
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            White glove delivery
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            Art and antiques shipping
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            High-value insurance
+                        </li>
+                    </ul>
+                    <div class="border-t pt-4">
+                        <p class="text-2xl font-bold text-red-600 mb-4">Call for Pricing</p>
+                        <a href="tel:+18001234567" class="block text-center bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-semibold">
+                            Call Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Why Choose Flash Dispatch?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">We're committed to providing the best logistics experience</p>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-3xl text-blue-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">24/7 Support</h3>
+                <p class="text-gray-600">Round-the-clock customer service</p>
+            </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-3xl text-green-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">100% Secure</h3>
+                <p class="text-gray-600">Insurance coverage available</p>
+            </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-chart-line text-3xl text-purple-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Real-time Tracking</h3>
+                <p class="text-gray-600">Live location updates</p>
+            </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-dollar-sign text-3xl text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Best Rates</h3>
+                <p class="text-gray-600">Competitive pricing guaranteed</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Service Comparison Table -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Compare Our Services</h2>
+            <p class="text-gray-600">Find the perfect service for your needs</p>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full bg-white rounded-xl shadow-lg">
+                <thead class="bg-gray-900 text-white">
+                    <tr>
+                        <th class="px-6 py-4 text-left">Feature</th>
+                        <th class="px-6 py-4 text-center">Express</th>
+                        <th class="px-6 py-4 text-center">Freight</th>
+                        <th class="px-6 py-4 text-center">International</th>
+                        <th class="px-6 py-4 text-center">Warehousing</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 font-medium">Delivery Time</td>
+                        <td class="px-6 py-4 text-center">1-2 days</td>
+                        <td class="px-6 py-4 text-center">3-7 days</td>
+                        <td class="px-6 py-4 text-center">3-10 days</td>
+                        <td class="px-6 py-4 text-center">N/A</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="px-6 py-4 font-medium">Tracking</td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-check-circle text-green-500"></i></td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-check-circle text-green-500"></i></td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-check-circle text-green-500"></i></td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-check-circle text-green-500"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-medium">Insurance</td>
+                        <td class="px-6 py-4 text-center">Up to $500</td>
+                        <td class="px-6 py-4 text-center">Up to $10,000</td>
+                        <td class="px-6 py-4 text-center">Up to $5,000</td>
+                        <td class="px-6 py-4 text-center">Up to $50,000</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="px-6 py-4 font-medium">Signature Required</td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-check-circle text-green-500"></i></td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-check-circle text-green-500"></i></td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-check-circle text-green-500"></i></td>
+                        <td class="px-6 py-4 text-center"><i class="fas fa-times-circle text-red-500"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+            <p class="text-gray-600">Got questions? We've got answers</p>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="border rounded-lg p-6 hover:shadow-md transition">
+                <h3 class="font-semibold text-lg mb-2">How long does express delivery take?</h3>
+                <p class="text-gray-600">Express delivery typically takes 1-2 business days for domestic shipments. Same-day delivery is available for local shipments placed before 12 PM.</p>
+            </div>
+            <div class="border rounded-lg p-6 hover:shadow-md transition">
+                <h3 class="font-semibold text-lg mb-2">Do you offer international shipping?</h3>
+                <p class="text-gray-600">Yes, we ship to over 100 countries worldwide. Delivery times vary by destination, typically 3-10 business days.</p>
+            </div>
+            <div class="border rounded-lg p-6 hover:shadow-md transition">
+                <h3 class="font-semibold text-lg mb-2">How can I track my shipment?</h3>
+                <p class="text-gray-600">You can track your shipment using the tracking number provided via email. Real-time updates are available on our website and mobile app.</p>
+            </div>
+            <div class="border rounded-lg p-6 hover:shadow-md transition">
+                <h3 class="font-semibold text-lg mb-2">What items are prohibited?</h3>
+                <p class="text-gray-600">We do not ship hazardous materials, firearms, illegal substances, perishable items without proper packaging, and items that violate local laws.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="gradient-bg py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">Ready to Ship With Us?</h2>
+        <p class="text-xl text-blue-100 mb-8">Join thousands of satisfied customers using Flash Dispatch</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="{% url 'dashboard:create_shipment' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition inline-flex items-center">
+                <i class="fas fa-box mr-2"></i>
+                Create Shipment
+            </a>
+            <a href="{% url 'landing:contact' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition inline-flex items-center">
+                <i class="fas fa-headset mr-2"></i>
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
