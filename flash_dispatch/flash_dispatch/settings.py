@@ -67,6 +67,10 @@ TEMPLATES = [
     },
 ]
 
+# WSGI and ASGI configurations
+WSGI_APPLICATION = 'flash_dispatch.wsgi.application'
+ASGI_APPLICATION = 'flash_dispatch.asgi.application'
+
 WSGI_APPLICATION = 'flash_dispatch.wsgi.application'
 
 # Database
@@ -127,3 +131,16 @@ LOGOUT_REDIRECT_URL = 'landing:home'
 # Codespaces specific - for file uploads
 FILE_UPLOAD_PERMISSIONS = 0o644
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+
+
+# WhiteNoise configuration for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
