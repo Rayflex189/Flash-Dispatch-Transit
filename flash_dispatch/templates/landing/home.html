@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fast & Reliable Courier Services{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-5xl font-bold mb-6">Fast, Secure & Reliable Courier Service</h1>
+                <p class="text-xl mb-8 text-blue-100">Get your packages delivered with lightning speed. Real-time tracking, secure handling, and professional service.</p>
+                <div class="flex space-x-4">
+                    <a href="{% url 'accounts:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        Get Started
+                    </a>
+                    <a href="#tracking" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+                        Track Package
+                    </a>
+                </div>
+            </div>
+            <div class="hidden md:block">
+                <img src="{% static 'images/courier-hero.svg' %}" alt="Courier Service" class="w-full">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tracking Section -->
+<section id="tracking" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Track Your Package</h2>
+            <p class="text-gray-600">Enter your tracking number to get real-time updates</p>
+        </div>
+        
+        <div class="max-w-2xl mx-auto">
+            <div class="flex">
+                <input type="text" 
+                       id="tracking-input"
+                       placeholder="Enter tracking number (e.g., FD1234567890)"
+                       class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
+                <button onclick="trackPackage()" 
+                        class="bg-blue-600 text-white px-8 py-3 rounded-r-lg hover:bg-blue-700 transition font-semibold">
+                    Track
+                </button>
+            </div>
+            <div id="tracking-result" class="mt-8"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-20">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Our Services</h2>
+            <p class="text-gray-600">Comprehensive courier solutions for all your needs</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-bolt text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Express Delivery</h3>
+                <p class="text-gray-600">Same-day delivery for urgent packages within the city</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-globe text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">International Shipping</h3>
+                <p class="text-gray-600">Worldwide shipping with customs handling</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-truck text-purple-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Freight Services</h3>
+                <p class="text-gray-600">Bulk shipping and freight forwarding solutions</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <img src="{% static 'images/tracking-feature.svg' %}" alt="Tracking Feature" class="w-full">
+            </div>
+            <div>
+                <h2 class="text-3xl font-bold mb-6">Real-Time Tracking Dashboard</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                            <i class="fas fa-check text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-1">Live Location Updates</h3>
+                            <p class="text-gray-600">Track your package in real-time on an interactive map</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                            <i class="fas fa-bell text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-1">Instant Notifications</h3>
+                            <p class="text-gray-600">Get notified when your package status changes</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                            <i class="fas fa-history text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-1">Complete History</h3>
+                            <p class="text-gray-600">View the entire journey of your package</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-blue-600 text-white py-20">
+    <div class="max-w-4xl mx-auto text-center px-4">
+        <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+        <p class="text-xl mb-8 text-blue-100">Join thousands of satisfied customers who trust Flash Dispatch for their courier needs</p>
+        <a href="{% url 'accounts:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
+            Create Free Account
+        </a>
+    </div>
+</section>
+
+<script>
+function trackPackage() {
+    const trackingNumber = document.getElementById('tracking-input').value;
+    const resultDiv = document.getElementById('tracking-result');
+    
+    if (!trackingNumber) {
+        resultDiv.innerHTML = '<div class="bg-red-100 text-red-700 p-4 rounded-lg">Please enter a tracking number</div>';
+        return;
+    }
+    
+    // Show loading
+    resultDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin text-3xl text-blue-600"></i></div>';
+    
+    // Make API call
+    fetch(`/api/track/${trackingNumber}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                resultDiv.innerHTML = `<div class="bg-red-100 text-red-700 p-4 rounded-lg">${data.error}</div>`;
+            } else {
+                displayTrackingResult(data);
+            }
+        })
+        .catch(error => {
+            resultDiv.innerHTML = '<div class="bg-red-100 text-red-700 p-4 rounded-lg">Error tracking package. Please try again.</div>';
+        });
+}
+
+function displayTrackingResult(data) {
+    const resultDiv = document.getElementById('tracking-result');
+    
+    let statusColor = 'bg-yellow-100 text-yellow-800';
+    if (data.status === 'delivered') statusColor = 'bg-green-100 text-green-800';
+    if (data.status === 'in_transit') statusColor = 'bg-blue-100 text-blue-800';
+    
+    let updatesHtml = '';
+    data.updates.forEach(update => {
+        updatesHtml += `
+            <div class="flex items-start mb-4">
+                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+                    <i class="fas fa-circle text-sm text-gray-600"></i>
+                </div>
+                <div>
+                    <p class="font-semibold">${update.status}</p>
+                    <p class="text-sm text-gray-600">${update.location} - ${update.timestamp}</p>
+                    <p class="text-sm text-gray-500">${update.description}</p>
+                </div>
+            </div>
+        `;
+    });
+    
+    resultDiv.innerHTML = `
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Tracking #${data.tracking_number}</h3>
+                <span class="px-3 py-1 rounded-full text-sm font-semibold ${statusColor}">${data.status}</span>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <h4 class="font-semibold mb-2">From</h4>
+                    <p>${data.sender_name}</p>
+                    <p class="text-sm text-gray-600">${data.sender_address}</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-2">To</h4>
+                    <p>${data.recipient_name}</p>
+                    <p class="text-sm text-gray-600">${data.recipient_address}</p>
+                </div>
+            </div>
+            
+            <div class="border-t pt-4">
+                <h4 class="font-semibold mb-4">Tracking Updates</h4>
+                <div class="space-y-2">
+                    ${updatesHtml}
+                </div>
+            </div>
+        </div>
+    `;
+}
+</script>
+{% endblock %}

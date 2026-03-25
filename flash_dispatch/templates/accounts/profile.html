@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="grid md:grid-cols-3 gap-8">
+        <!-- Profile Sidebar -->
+        <div class="md:col-span-1">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="text-center">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="Profile" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
+                    {% else %}
+                        <div class="w-32 h-32 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-user text-4xl text-gray-600"></i>
+                        </div>
+                    {% endif %}
+                    <h2 class="text-xl font-bold">{{ user.get_full_name|default:user.username }}</h2>
+                    <p class="text-gray-600">{{ user.email }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Member since {{ user.date_joined|date:"M Y" }}</p>
+                </div>
+                
+                <div class="border-t mt-4 pt-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600">User Type:</span>
+                        <span class="font-semibold capitalize">{{ user.get_user_type_display }}</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600">Phone:</span>
+                        <span class="font-semibold">{{ user.phone_number|default:"Not set" }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Company:</span>
+                        <span class="font-semibold">{{ user.company_name|default:"Not set" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Edit Form -->
+        <div class="md:col-span-2">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold mb-6">Edit Profile</h2>
+                
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    
+                    <div class="mt-6">
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Saved Addresses -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Saved Addresses</h2>
+                    <button onclick="showAddressForm()" class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-plus mr-1"></i>Add Address
+                    </button>
+                </div>
+
+                <!-- Address List -->
+                <div class="space-y-4">
+                    {% for address in addresses %}
+                    <div class="border rounded-lg p-4 {% if address.is_default %}border-blue-500 bg-blue-50{% endif %}">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-semibold">{{ address.address_line1 }}</p>
+                                {% if address.address_line2 %}
+                                    <p class="text-gray-600">{{ address.address_line2 }}</p>
+                                {% endif %}
+                                <p class="text-gray-600">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
+                                <p class="text-gray-600">{{ address.country }}</p>
+                                {% if address.is_default %}
+                                    <span class="inline-block mt-2 text-xs bg-blue-500 text-white px-2 py-1 rounded">Default</span>
+                                {% endif %}
+                            </div>
+                            <div class="flex space-x-2">
+                                {% if not address.is_default %}
+                                <a href="{% url 'accounts:set_default_address' address.id %}" class="text-green-600 hover:text-green-800">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'accounts:delete_address' address.id %}" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500 text-center">No addresses saved yet.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Hidden Address Form -->
+                <div id="address-form" class="hidden mt-6 border-t pt-4">
+                    <h3 class="font-semibold mb-4">Add New Address</h3>
+                    <form method="post" action="{% url 'accounts:add_address' %}">
+                        {% csrf_token %}
+                        {{ address_form|crispy }}
+                        <div class="mt-4 flex space-x-2">
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                Save Address
+                            </button>
+                            <button type="button" onclick="hideAddressForm()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showAddressForm() {
+    document.getElementById('address-form').classList.remove('hidden');
+}
+
+function hideAddressForm() {
+    document.getElementById('address-form').classList.add('hidden');
+}
+</script>
+{% endblock %}

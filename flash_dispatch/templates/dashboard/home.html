@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Welcome Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold">Welcome back, {{ user.username }}!</h1>
+        <p class="text-gray-600">Here's what's happening with your shipments</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">Total Shipments</p>
+                    <p class="text-2xl font-bold">{{ total_shipments }}</p>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-box text-blue-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">In Transit</p>
+                    <p class="text-2xl font-bold">{{ in_transit }}</p>
+                </div>
+                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-truck text-yellow-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">Delivered</p>
+                    <p class="text-2xl font-bold">{{ delivered_shipments }}</p>
+                </div>
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm">Pending</p>
+                    <p class="text-2xl font-bold">{{ pending_shipments|default:0 }}</p>
+                </div>
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-clock text-red-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-8">
+        <a href="{% url 'dashboard:create_shipment' %}" class="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+            <i class="fas fa-plus mr-2"></i>
+            Create New Shipment
+        </a>
+    </div>
+
+    <!-- Recent Shipments -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="px-6 py-4 border-b">
+            <h2 class="text-xl font-semibold">Recent Shipments</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tracking #</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipient</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for shipment in shipments %}
+                    <tr>
+                        <td class="px-6 py-4">
+                            <span class="font-mono">{{ shipment.tracking_number }}</span>
+                        </td>
+                        <td class="px-6 py-4">{{ shipment.recipient_name }}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                {% if shipment.status == 'delivered' %}bg-green-100 text-green-800
+                                {% elif shipment.status == 'in_transit' %}bg-blue-100 text-blue-800
+                                {% elif shipment.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ shipment.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">{{ shipment.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'dashboard:shipment_detail' shipment.tracking_number %}" class="text-blue-600 hover:text-blue-800">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                            No shipments yet. <a href="{% url 'dashboard:create_shipment' %}" class="text-blue-600">Create your first shipment</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Activity Timeline -->
+    <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+        <div class="space-y-4">
+            {% for activity in recent_activity %}
+            <div class="flex items-start">
+                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+                    <i class="fas fa-circle text-sm text-gray-600"></i>
+                </div>
+                <div>
+                    <p class="font-semibold">{{ activity.latest_update.status|default:"Shipment created" }}</p>
+                    <p class="text-sm text-gray-600">{{ activity.shipment.tracking_number }} - {{ activity.shipment.recipient_name }}</p>
+                    <p class="text-xs text-gray-500">{{ activity.latest_update.timestamp|default:activity.shipment.created_at|timesince }} ago</p>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 text-center">No recent activity</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
