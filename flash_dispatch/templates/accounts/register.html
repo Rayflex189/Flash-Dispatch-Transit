@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account - Flash Dispatch{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="{% url 'landing:home' %}" class="text-3xl font-extrabold">
+                <span class="text-blue-600">FLASH</span>
+                <span class="text-gray-800">DISPATCH</span>
+            </a>
+            <p class="mt-2 text-gray-600">Create your account and start shipping today</p>
+        </div>
+
+        <!-- Registration Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4">
+                <h2 class="text-xl font-semibold text-white flex items-center">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Create New Account
+                </h2>
+            </div>
+
+            <!-- Form -->
+            <form method="post" class="p-6">
+                {% csrf_token %}
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Username -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-user text-gray-400 mr-2"></i>
+                            Username *
+                        </label>
+                        <input type="text" name="username" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               placeholder="Choose a username">
+                        <p class="text-xs text-gray-500 mt-1">150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope text-gray-400 mr-2"></i>
+                            Email Address *
+                        </label>
+                        <input type="email" name="email" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               placeholder="Enter your email">
+                    </div>
+
+                    <!-- First Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                        <input type="text" name="first_name" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               placeholder="First name">
+                    </div>
+
+                    <!-- Last Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                        <input type="text" name="last_name" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               placeholder="Last name">
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-phone text-gray-400 mr-2"></i>
+                            Phone Number *
+                        </label>
+                        <input type="tel" name="phone_number" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               placeholder="Enter your phone number">
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-key text-gray-400 mr-2"></i>
+                            Password *
+                        </label>
+                        <input type="password" name="password1" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               placeholder="Create password">
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-key text-gray-400 mr-2"></i>
+                            Confirm Password *
+                        </label>
+                        <input type="password" name="password2" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               placeholder="Confirm password">
+                    </div>
+
+                    <!-- Account Type -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Account Type</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="user_type" value="customer" checked class="text-blue-600">
+                                <span class="ml-2">Individual Customer</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="user_type" value="business" class="text-blue-600">
+                                <span class="ml-2">Business Account</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="md:col-span-2">
+                        <label class="flex items-start">
+                            <input type="checkbox" name="terms" required class="mt-1 rounded text-blue-600">
+                            <span class="ml-2 text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-blue-600 hover:text-blue-800">Terms of Service</a> 
+                                and <a href="#" class="text-blue-600 hover:text-blue-800">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Error Messages -->
+                    {% if form.errors %}
+                        <div class="md:col-span-2 bg-red-50 border-l-4 border-red-500 p-4">
+                            <p class="text-sm text-red-600 font-medium mb-2">Please correct the following errors:</p>
+                            <ul class="text-xs text-red-600 list-disc list-inside">
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Submit Button -->
+                    <div class="md:col-span-2">
+                        <button type="submit" 
+                                class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition transform hover:scale-[1.02]">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Create Account
+                        </button>
+                    </div>
+
+                    <!-- Login Link -->
+                    <div class="md:col-span-2 text-center pt-4 border-t">
+                        <p class="text-gray-600">
+                            Already have an account? 
+                            <a href="{% url 'accounts:login' %}" class="text-blue-600 font-semibold hover:text-blue-800">
+                                Sign in here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Features -->
+        <div class="grid grid-cols-3 gap-4 mt-8">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-truck text-blue-600"></i>
+                </div>
+                <p class="text-xs text-gray-600">Real-time Tracking</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-shield-alt text-green-600"></i>
+                </div>
+                <p class="text-xs text-gray-600">Secure Shipping</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-headset text-purple-600"></i>
+                </div>
+                <p class="text-xs text-gray-600">24/7 Support</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

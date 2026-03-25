@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shipment Details - {{ shipment.tracking_number }}{% endblock %}
+
+{% block content %}
+<div class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <!-- Header with Actions -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold">Shipment Details</h1>
+                <p class="text-gray-600">Tracking #: <span class="font-mono font-medium">{{ shipment.tracking_number }}</span></p>
+            </div>
+            <div class="mt-4 md:mt-0 flex space-x-3">
+                <button onclick="window.print()" class="bg-white text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition flex items-center">
+                    <i class="fas fa-print mr-2"></i>Print
+                </button>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center">
+                    <i class="fas fa-share-alt mr-2"></i>Share
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Banner -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+            <div class="{% if shipment.status == 'delivered' %}bg-green-500{% elif shipment.status == 'in_transit' %}bg-blue-500{% elif shipment.status == 'out_for_delivery' %}bg-purple-500{% else %}bg-yellow-500{% endif %} px-6 py-4">
+                <div class="flex items-center justify-between text-white">
+                    <div class="flex items-center">
+                        {% if shipment.status == 'delivered' %}
+                            <i class="fas fa-check-circle text-2xl mr-3"></i>
+                        {% elif shipment.status == 'in_transit' %}
+                            <i class="fas fa-truck text-2xl mr-3"></i>
+                        {% elif shipment.status == 'out_for_delivery' %}
+                            <i class="fas fa-truck-fast text-2xl mr-3"></i>
+                        {% else %}
+                            <i class="fas fa-clock text-2xl mr-3"></i>
+                        {% endif %}
+                        <div>
+                            <p class="text-sm opacity-90">Current Status</p>
+                            <p class="text-xl font-semibold">{{ shipment.get_status_display }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm opacity-90">Last Updated</p>
+                        <p class="font-semibold">{{ shipment.updated_at|date:"M d, Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Left Column - Tracking Timeline -->
+            <div class="md:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-map-marked-alt text-blue-600 mr-2"></i>
+                        Tracking Timeline
+                    </h2>
+                    
+                    <div class="relative">
+                        <!-- Timeline Line -->
+                        <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                        
+                        <!-- Timeline Items -->
+                        <div class="space-y-6">
+                            {% for update in tracking_updates %}
+                            <div class="relative pl-10">
+                                <div class="absolute left-0 w-8 h-8 {% if forloop.first %}bg-blue-600{% else %}bg-gray-300{% endif %} rounded-full flex items-center justify-center text-white">
+                                    {% if forloop.first %}
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    {% else %}
+                                        <i class="fas fa-circle text-xs"></i>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <p class="font-semibold {% if forloop.first %}text-blue-600{% endif %}">{{ update.status }}</p>
+                                    <p class="text-sm text-gray-600">{{ update.location }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">{{ update.timestamp|date:"M d, Y H:i" }}</p>
+                                    <p class="text-sm text-gray-700 mt-2">{{ update.description }}</p>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-8">
+                                <i class="fas fa-history text-4xl text-gray-300 mb-3"></i>
+                                <p class="text-gray-500">No tracking updates yet</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Map (Optional) -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-map text-blue-600 mr-2"></i>
+                        Current Location
+                    </h2>
+                    <div class="bg-gray-200 h-64 rounded-lg flex items-center justify-center">
+                        <p class="text-gray-500">Live map integration coming soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Shipment Info -->
+            <div class="md:col-span-1">
+                <!-- Package Details -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-box text-blue-600 mr-2"></i>
+                        Package Details
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Weight:</span>
+                            <span class="font-medium">{{ shipment.weight }} kg</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Dimensions:</span>
+                            <span class="font-medium">{{ shipment.dimensions }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Service:</span>
+                            <span class="font-medium">{{ shipment.get_service_type_display }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Created:</span>
+                            <span class="font-medium">{{ shipment.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Est. Delivery:</span>
+                            <span class="font-medium">{{ shipment.estimated_delivery|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sender Info -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user text-blue-600 mr-2"></i>
+                        Sender
+                    </h2>
+                    <div class="space-y-2">
+                        <p class="font-medium">{{ shipment.sender_name }}</p>
+                        <p class="text-sm text-gray-600">{{ shipment.sender_phone }}</p>
+                        <p class="text-sm text-gray-600">{{ shipment.sender_email }}</p>
+                        <p class="text-sm text-gray-600 mt-2">{{ shipment.sender_address }}</p>
+                    </div>
+                </div>
+
+                <!-- Recipient Info -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user-tie text-blue-600 mr-2"></i>
+                        Recipient
+                    </h2>
+                    <div class="space-y-2">
+                        <p class="font-medium">{{ shipment.recipient_name }}</p>
+                        <p class="text-sm text-gray-600">{{ shipment.recipient_phone }}</p>
+                        <p class="text-sm text-gray-600">{{ shipment.recipient_email }}</p>
+                        <p class="text-sm text-gray-600 mt-2">{{ shipment.recipient_address }}</p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h2 class="text-lg font-semibold mb-4">Actions</h2>
+                    <div class="space-y-2">
+                        <button class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                            <i class="fas fa-bell mr-2"></i>Get Notifications
+                        </button>
+                        <button class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                            <i class="fas fa-phone-alt mr-2"></i>Contact Support
+                        </button>
+                        <button class="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                            <i class="fas fa-file-pdf mr-2"></i>Download Label
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Share Modal -->
+<div id="shareModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl max-w-md w-full p-6">
+        <h3 class="text-xl font-bold mb-4">Share Shipment</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tracking Number</label>
+                <div class="flex">
+                    <input type="text" value="{{ shipment.tracking_number }}" readonly class="flex-1 px-4 py-2 bg-gray-100 border rounded-l-lg">
+                    <button onclick="copyTrackingNumber()" class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Share Link</label>
+                <div class="flex">
+                    <input type="text" value="{{ request.build_absolute_uri }}" readonly class="flex-1 px-4 py-2 bg-gray-100 border rounded-l-lg">
+                    <button onclick="copyShareLink()" class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeShareModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyTrackingNumber() {
+    navigator.clipboard.writeText('{{ shipment.tracking_number }}');
+    alert('Tracking number copied!');
+}
+
+function copyShareLink() {
+    navigator.clipboard.writeText('{{ request.build_absolute_uri }}');
+    alert('Link copied!');
+}
+
+function closeShareModal() {
+    document.getElementById('shareModal').style.display = 'none';
+}
+</script>
+{% endblock %}

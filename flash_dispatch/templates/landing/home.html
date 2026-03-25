@@ -1,129 +1,229 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Fast & Reliable Courier Services{% endblock %}
+{% block title %}Professional Courier & Consignment Services{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <h1 class="text-5xl font-bold mb-6">Fast, Secure & Reliable Courier Service</h1>
-                <p class="text-xl mb-8 text-blue-100">Get your packages delivered with lightning speed. Real-time tracking, secure handling, and professional service.</p>
-                <div class="flex space-x-4">
-                    <a href="{% url 'accounts:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
-                        Get Started
-                    </a>
-                    <a href="#tracking" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
-                        Track Package
-                    </a>
+<section class="relative overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
+             class="w-full h-full object-cover" alt="Logistics">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-800 to-transparent opacity-90"></div>
+    </div>
+    
+    <div class="relative container mx-auto px-4 py-24 lg:py-32">
+        <div class="max-w-3xl">
+            <h1 class="text-4xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
+                Global Logistics & <br>Consignment Solutions
+            </h1>
+            <p class="text-xl text-blue-100 mb-8">
+                Experience seamless shipping with real-time tracking, competitive rates, and 24/7 support. Your trusted partner in global delivery.
+            </p>
+            
+            <!-- Quick Track -->
+            <div class="bg-white p-4 rounded-lg shadow-2xl max-w-2xl">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Track Your Consignment</label>
+                        <div class="flex">
+                            <input type="text" 
+                                   id="tracking-input"
+                                   placeholder="Enter tracking number (e.g., FD1234567890)"
+                                   class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <button onclick="trackPackage()" 
+                                    class="bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-700 transition font-semibold">
+                                Track
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-500">or</span>
+                        <a href="{% url 'dashboard:create_shipment' %}" class="ml-2 text-blue-600 font-semibold hover:text-blue-700">
+                            Create Shipment
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="hidden md:block">
-                <img src="{% static 'images/courier-hero.svg' %}" alt="Courier Service" class="w-full">
             </div>
         </div>
     </div>
 </section>
 
-<!-- Tracking Section -->
-<section id="tracking" class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">Track Your Package</h2>
-            <p class="text-gray-600">Enter your tracking number to get real-time updates</p>
-        </div>
-        
-        <div class="max-w-2xl mx-auto">
-            <div class="flex">
-                <input type="text" 
-                       id="tracking-input"
-                       placeholder="Enter tracking number (e.g., FD1234567890)"
-                       class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
-                <button onclick="trackPackage()" 
-                        class="bg-blue-600 text-white px-8 py-3 rounded-r-lg hover:bg-blue-700 transition font-semibold">
-                    Track
-                </button>
+<!-- Stats Section -->
+<section class="py-12 bg-white border-b">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-600">50K+</div>
+                <div class="text-gray-600">Shipments Delivered</div>
             </div>
-            <div id="tracking-result" class="mt-8"></div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-600">100+</div>
+                <div class="text-gray-600">Countries Covered</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-600">24/7</div>
+                <div class="text-gray-600">Customer Support</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-600">99.9%</div>
+                <div class="text-gray-600">On-Time Delivery</div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Services Section -->
-<section id="services" class="py-20">
-    <div class="max-w-7xl mx-auto px-4">
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold mb-4">Our Services</h2>
-            <p class="text-gray-600">Comprehensive courier solutions for all your needs</p>
+            <p class="text-gray-600 max-w-2xl mx-auto">Comprehensive logistics solutions tailored to your business needs</p>
         </div>
         
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-bolt text-blue-600 text-2xl"></i>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Express Delivery -->
+            <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-bolt text-3xl text-blue-600"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Express Delivery</h3>
-                <p class="text-gray-600">Same-day delivery for urgent packages within the city</p>
+                <h3 class="text-xl font-bold mb-2">Express Delivery</h3>
+                <p class="text-gray-600 mb-4">Same-day and next-day delivery for urgent shipments</p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Same-day delivery</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Real-time tracking</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Priority handling</li>
+                </ul>
+                <a href="#" class="mt-4 inline-block text-blue-600 font-semibold hover:text-blue-700">Learn More →</a>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-globe text-green-600 text-2xl"></i>
+            <!-- Freight Shipping -->
+            <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-ship text-3xl text-green-600"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">International Shipping</h3>
-                <p class="text-gray-600">Worldwide shipping with customs handling</p>
+                <h3 class="text-xl font-bold mb-2">Freight Shipping</h3>
+                <p class="text-gray-600 mb-4">Air, sea, and road freight for large shipments</p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Full container load</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Less than container</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Customs clearance</li>
+                </ul>
+                <a href="#" class="mt-4 inline-block text-green-600 font-semibold hover:text-green-700">Learn More →</a>
             </div>
             
-            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-truck text-purple-600 text-2xl"></i>
+            <!-- Warehousing -->
+            <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                <div class="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-warehouse text-3xl text-purple-600"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">Freight Services</h3>
-                <p class="text-gray-600">Bulk shipping and freight forwarding solutions</p>
+                <h3 class="text-xl font-bold mb-2">Warehousing</h3>
+                <p class="text-gray-600 mb-4">Secure storage and inventory management</p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Climate controlled</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>24/7 security</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Inventory tracking</li>
+                </ul>
+                <a href="#" class="mt-4 inline-block text-purple-600 font-semibold hover:text-purple-700">Learn More →</a>
+            </div>
+            
+            <!-- International -->
+            <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                <div class="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-globe text-3xl text-orange-600"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">International</h3>
+                <p class="text-gray-600 mb-4">Global shipping to over 100 countries</p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Door-to-door</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Customs brokerage</li>
+                    <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-2"></i>Track & trace</li>
+                </ul>
+                <a href="#" class="mt-4 inline-block text-orange-600 font-semibold hover:text-orange-700">Learn More →</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <img src="{% static 'images/tracking-feature.svg' %}" alt="Tracking Feature" class="w-full">
+<!-- Tracking Result Section (Hidden by default) -->
+<div id="tracking-result" class="hidden container mx-auto px-4 py-8"></div>
+
+<!-- How It Works -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">How It Works</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Simple and efficient process for all your shipping needs</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold text-blue-600">1</div>
+                <h3 class="text-xl font-bold mb-2">Create Shipment</h3>
+                <p class="text-gray-600">Fill in the details about your package and destination</p>
             </div>
-            <div>
-                <h2 class="text-3xl font-bold mb-6">Real-Time Tracking Dashboard</h2>
-                <div class="space-y-4">
-                    <div class="flex items-start">
-                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
-                            <i class="fas fa-check text-green-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-1">Live Location Updates</h3>
-                            <p class="text-gray-600">Track your package in real-time on an interactive map</p>
-                        </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold text-blue-600">2</div>
+                <h3 class="text-xl font-bold mb-2">We Pick Up</h3>
+                <p class="text-gray-600">Our courier picks up your package at your convenience</p>
+            </div>
+            <div class="text-center">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold text-blue-600">3</div>
+                <h3 class="text-xl font-bold mb-2">Track & Deliver</h3>
+                <p class="text-gray-600">Track in real-time until safe delivery</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">What Our Clients Say</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Trusted by businesses worldwide</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">JD</div>
+                    <div class="ml-4">
+                        <h4 class="font-bold">John Doe</h4>
+                        <p class="text-sm text-gray-600">CEO, Tech Corp</p>
                     </div>
-                    <div class="flex items-start">
-                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-4 mt-1">
-                            <i class="fas fa-bell text-blue-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-1">Instant Notifications</h3>
-                            <p class="text-gray-600">Get notified when your package status changes</p>
-                        </div>
+                </div>
+                <p class="text-gray-600 mb-4">"Flash Dispatch has transformed our logistics. Their real-time tracking and reliable service are unmatched."</p>
+                <div class="text-yellow-400">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl">AS</div>
+                    <div class="ml-4">
+                        <h4 class="font-bold">Alice Smith</h4>
+                        <p class="text-sm text-gray-600">Operations Manager</p>
                     </div>
-                    <div class="flex items-start">
-                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-4 mt-1">
-                            <i class="fas fa-history text-purple-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold mb-1">Complete History</h3>
-                            <p class="text-gray-600">View the entire journey of your package</p>
-                        </div>
+                </div>
+                <p class="text-gray-600 mb-4">"The best courier service we've used. International shipping is seamless and customer support is excellent."</p>
+                <div class="text-yellow-400">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">MW</div>
+                    <div class="ml-4">
+                        <h4 class="font-bold">Mike Wilson</h4>
+                        <p class="text-sm text-gray-600">E-commerce Owner</p>
                     </div>
+                </div>
+                <p class="text-gray-600 mb-4">"Fast, reliable, and affordable. The dashboard makes it easy to manage all my shipments in one place."</p>
+                <div class="text-yellow-400">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                 </div>
             </div>
         </div>
@@ -131,12 +231,13 @@
 </section>
 
 <!-- CTA Section -->
-<section class="bg-blue-600 text-white py-20">
-    <div class="max-w-4xl mx-auto text-center px-4">
-        <h2 class="text-4xl font-bold mb-4">Ready to Get Started?</h2>
-        <p class="text-xl mb-8 text-blue-100">Join thousands of satisfied customers who trust Flash Dispatch for their courier needs</p>
-        <a href="{% url 'accounts:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
+<section class="gradient-bg py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
+        <p class="text-xl text-blue-100 mb-8">Join thousands of satisfied customers using Flash Dispatch</p>
+        <a href="{% url 'accounts:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition inline-flex items-center">
             Create Free Account
+            <i class="fas fa-arrow-right ml-2"></i>
         </a>
     </div>
 </section>
@@ -147,12 +248,13 @@ function trackPackage() {
     const resultDiv = document.getElementById('tracking-result');
     
     if (!trackingNumber) {
-        resultDiv.innerHTML = '<div class="bg-red-100 text-red-700 p-4 rounded-lg">Please enter a tracking number</div>';
+        alert('Please enter a tracking number');
         return;
     }
     
     // Show loading
-    resultDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin text-3xl text-blue-600"></i></div>';
+    resultDiv.classList.remove('hidden');
+    resultDiv.innerHTML = '<div class="text-center"><div class="loading-spinner mx-auto"></div><p class="mt-4 text-gray-600">Tracking your package...</p></div>';
     
     // Make API call
     fetch(`/api/track/${trackingNumber}/`)
@@ -173,19 +275,33 @@ function displayTrackingResult(data) {
     const resultDiv = document.getElementById('tracking-result');
     
     let statusColor = 'bg-yellow-100 text-yellow-800';
-    if (data.status === 'delivered') statusColor = 'bg-green-100 text-green-800';
-    if (data.status === 'in_transit') statusColor = 'bg-blue-100 text-blue-800';
+    let statusIcon = 'fa-clock';
+    if (data.status === 'delivered') {
+        statusColor = 'bg-green-100 text-green-800';
+        statusIcon = 'fa-check-circle';
+    }
+    if (data.status === 'in_transit') {
+        statusColor = 'bg-blue-100 text-blue-800';
+        statusIcon = 'fa-truck';
+    }
+    if (data.status === 'out_for_delivery') {
+        statusColor = 'bg-purple-100 text-purple-800';
+        statusIcon = 'fa-truck-fast';
+    }
     
     let updatesHtml = '';
-    data.updates.forEach(update => {
+    data.updates.forEach((update, index) => {
         updatesHtml += `
-            <div class="flex items-start mb-4">
-                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-4">
-                    <i class="fas fa-circle text-sm text-gray-600"></i>
+            <div class="flex items-start mb-4 ${index === 0 ? 'opacity-100' : 'opacity-60'}">
+                <div class="w-10 h-10 ${index === 0 ? 'bg-blue-600' : 'bg-gray-300'} rounded-full flex items-center justify-center text-white mr-4 flex-shrink-0">
+                    <i class="fas ${index === 0 ? 'fa-map-marker-alt' : 'fa-circle'}"></i>
                 </div>
-                <div>
-                    <p class="font-semibold">${update.status}</p>
-                    <p class="text-sm text-gray-600">${update.location} - ${update.timestamp}</p>
+                <div class="flex-1">
+                    <div class="flex justify-between">
+                        <p class="font-semibold ${index === 0 ? 'text-blue-600' : ''}">${update.status}</p>
+                        <p class="text-sm text-gray-500">${new Date(update.timestamp).toLocaleString()}</p>
+                    </div>
+                    <p class="text-gray-600">${update.location}</p>
                     <p class="text-sm text-gray-500">${update.description}</p>
                 </div>
             </div>
@@ -193,29 +309,53 @@ function displayTrackingResult(data) {
     });
     
     resultDiv.innerHTML = `
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">Tracking #${data.tracking_number}</h3>
-                <span class="px-3 py-1 rounded-full text-sm font-semibold ${statusColor}">${data.status}</span>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    <h4 class="font-semibold mb-2">From</h4>
-                    <p>${data.sender_name}</p>
-                    <p class="text-sm text-gray-600">${data.sender_address}</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-2">To</h4>
-                    <p>${data.recipient_name}</p>
-                    <p class="text-sm text-gray-600">${data.recipient_address}</p>
+        <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-white">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm opacity-90">Tracking Number</p>
+                        <h3 class="text-2xl font-mono font-bold">${data.tracking_number}</h3>
+                    </div>
+                    <span class="px-4 py-2 rounded-full text-sm font-semibold ${statusColor}">
+                        <i class="fas ${statusIcon} mr-2"></i>${data.status.replace('_', ' ').toUpperCase()}
+                    </span>
                 </div>
             </div>
             
-            <div class="border-t pt-4">
-                <h4 class="font-semibold mb-4">Tracking Updates</h4>
-                <div class="space-y-2">
-                    ${updatesHtml}
+            <div class="p-6">
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="border-r pr-6">
+                        <p class="text-sm text-gray-500 mb-2">From</p>
+                        <p class="font-semibold">${data.sender_name}</p>
+                        <p class="text-gray-600 text-sm">${data.sender_address}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 mb-2">To</p>
+                        <p class="font-semibold">${data.recipient_name}</p>
+                        <p class="text-gray-600 text-sm">${data.recipient_address}</p>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-6">
+                    <h4 class="font-semibold mb-4 flex items-center">
+                        <i class="fas fa-history text-blue-600 mr-2"></i>
+                        Tracking History
+                    </h4>
+                    <div class="space-y-2">
+                        ${updatesHtml}
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mt-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-600">Estimated Delivery</p>
+                            <p class="font-bold text-lg">${new Date(data.estimated_delivery).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        </div>
+                        <button onclick="window.location.href='/dashboard/shipments/'" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            View Details
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

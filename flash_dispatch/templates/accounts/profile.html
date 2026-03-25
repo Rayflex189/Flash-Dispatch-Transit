@@ -1,118 +1,342 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}My Profile{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 py-8">
-    <div class="grid md:grid-cols-3 gap-8">
-        <!-- Profile Sidebar -->
-        <div class="md:col-span-1">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <div class="text-center">
-                    {% if user.profile_picture %}
-                        <img src="{{ user.profile_picture.url }}" alt="Profile" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover">
-                    {% else %}
-                        <div class="w-32 h-32 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <i class="fas fa-user text-4xl text-gray-600"></i>
-                        </div>
-                    {% endif %}
-                    <h2 class="text-xl font-bold">{{ user.get_full_name|default:user.username }}</h2>
-                    <p class="text-gray-600">{{ user.email }}</p>
-                    <p class="text-sm text-gray-500 mt-2">Member since {{ user.date_joined|date:"M Y" }}</p>
+<div class="bg-gray-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <!-- Profile Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-t-2xl p-8 text-white">
+            <div class="flex flex-col md:flex-row items-center md:items-end justify-between">
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile" 
+                                 class="w-24 h-24 rounded-full border-4 border-white object-cover">
+                        {% else %}
+                            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                                <span class="text-4xl font-bold text-blue-600">
+                                    {{ user.username|first|upper }}
+                                </span>
+                            </div>
+                        {% endif %}
+                        <button class="absolute bottom-0 right-0 bg-white text-blue-600 p-2 rounded-full shadow-lg hover:bg-gray-100">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold">{{ user.get_full_name|default:user.username }}</h1>
+                        <p class="text-blue-100 flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            {{ user.city|default:"Location not set" }}
+                        </p>
+                    </div>
                 </div>
-                
-                <div class="border-t mt-4 pt-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-600">User Type:</span>
-                        <span class="font-semibold capitalize">{{ user.get_user_type_display }}</span>
-                    </div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-600">Phone:</span>
-                        <span class="font-semibold">{{ user.phone_number|default:"Not set" }}</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-600">Company:</span>
-                        <span class="font-semibold">{{ user.company_name|default:"Not set" }}</span>
-                    </div>
+                <div class="mt-4 md:mt-0 flex space-x-3">
+                    <span class="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold">
+                        <i class="fas fa-star mr-2"></i>Premium Member
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!-- Profile Edit Form -->
-        <div class="md:col-span-2">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-xl font-bold mb-6">Edit Profile</h2>
-                
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    
-                    <div class="mt-6">
-                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                            Update Profile
-                        </button>
-                    </div>
-                </form>
-            </div>
+        <!-- Profile Content -->
+        <div class="bg-white rounded-b-2xl shadow-xl p-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Left Column - Quick Info -->
+                <div class="md:col-span-1">
+                    <div class="space-y-6">
+                        <!-- Member Stats -->
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h3 class="font-semibold mb-4 flex items-center">
+                                <i class="fas fa-chart-pie text-blue-600 mr-2"></i>
+                                Account Stats
+                            </h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Member Since</span>
+                                    <span class="font-medium">{{ user.date_joined|date:"M Y" }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Total Shipments</span>
+                                    <span class="font-medium">{{ total_shipments|default:"0" }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">This Month</span>
+                                    <span class="font-medium">{{ monthly_shipments|default:"0" }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Loyalty Points</span>
+                                    <span class="font-medium text-blue-600">{{ loyalty_points|default:"1,250" }}</span>
+                                </div>
+                            </div>
+                        </div>
 
-            <!-- Saved Addresses -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold">Saved Addresses</h2>
-                    <button onclick="showAddressForm()" class="text-blue-600 hover:text-blue-800">
-                        <i class="fas fa-plus mr-1"></i>Add Address
-                    </button>
+                        <!-- Quick Actions -->
+                        <div class="bg-gray-50 p-6 rounded-xl">
+                            <h3 class="font-semibold mb-4 flex items-center">
+                                <i class="fas fa-bolt text-blue-600 mr-2"></i>
+                                Quick Actions
+                            </h3>
+                            <div class="space-y-2">
+                                <a href="{% url 'dashboard:create_shipment' %}" class="block p-3 bg-white rounded-lg hover:bg-blue-50 transition">
+                                    <i class="fas fa-plus-circle text-blue-600 mr-2"></i>
+                                    Create New Shipment
+                                </a>
+                                <a href="#" class="block p-3 bg-white rounded-lg hover:bg-blue-50 transition">
+                                    <i class="fas fa-history text-blue-600 mr-2"></i>
+                                    View Shipment History
+                                </a>
+                                <a href="#" class="block p-3 bg-white rounded-lg hover:bg-blue-50 transition">
+                                    <i class="fas fa-download text-blue-600 mr-2"></i>
+                                    Download Invoice
+                                </a>
+                                <a href="#" class="block p-3 bg-white rounded-lg hover:bg-blue-50 transition">
+                                    <i class="fas fa-headset text-blue-600 mr-2"></i>
+                                    Contact Support
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Address List -->
-                <div class="space-y-4">
-                    {% for address in addresses %}
-                    <div class="border rounded-lg p-4 {% if address.is_default %}border-blue-500 bg-blue-50{% endif %}">
-                        <div class="flex justify-between items-start">
+                <!-- Right Column - Profile Forms -->
+                <div class="md:col-span-2">
+                    <!-- Tabs -->
+                    <div class="border-b mb-6">
+                        <nav class="flex space-x-8">
+                            <button onclick="showTab('personal')" class="tab-button active pb-4 px-1 border-b-2 border-blue-600 text-blue-600 font-medium">
+                                Personal Info
+                            </button>
+                            <button onclick="showTab('addresses')" class="tab-button pb-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium">
+                                Addresses
+                            </button>
+                            <button onclick="showTab('security')" class="tab-button pb-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium">
+                                Security
+                            </button>
+                            <button onclick="showTab('preferences')" class="tab-button pb-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium">
+                                Preferences
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Personal Info Tab -->
+                    <div id="personal" class="tab-content">
+                        <form method="post" enctype="multipart/form-data" class="space-y-6">
+                            {% csrf_token %}
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                    <input type="text" name="first_name" value="{{ user.first_name }}" 
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                    <input type="text" name="last_name" value="{{ user.last_name }}" 
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                    <input type="email" name="email" value="{{ user.email }}" 
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                    <input type="tel" name="phone_number" value="{{ user.phone_number }}" 
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                                    <input type="date" name="date_of_birth" value="{{ user.date_of_birth|date:'Y-m-d' }}" 
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                                    <input type="text" name="company_name" value="{{ user.company_name }}" 
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                                    <textarea name="address" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">{{ user.address }}</textarea>
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Addresses Tab -->
+                    <div id="addresses" class="tab-content hidden">
+                        <div class="space-y-4">
+                            {% for address in addresses %}
+                            <div class="border rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>
+                                            <h4 class="font-semibold">{{ address.address_line1 }}</h4>
+                                            {% if address.is_default %}
+                                                <span class="ml-2 bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">Default</span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-gray-600">{{ address.address_line2 }}</p>
+                                        <p class="text-gray-600">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
+                                        <p class="text-gray-600">{{ address.country }}</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="text-center py-8">
+                                <i class="fas fa-map-marked-alt text-4xl text-gray-300 mb-3"></i>
+                                <p class="text-gray-500">No addresses saved yet</p>
+                                <button onclick="showAddAddress()" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                                    Add Address
+                                </button>
+                            </div>
+                            {% endfor %}
+                            
+                            <!-- Add Address Form (Hidden) -->
+                            <div id="addAddressForm" class="hidden mt-6 border-t pt-6">
+                                <h4 class="font-semibold mb-4">Add New Address</h4>
+                                <form method="post" action="{% url 'accounts:add_address' %}" class="space-y-4">
+                                    {% csrf_token %}
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <input type="text" name="address_line1" placeholder="Address Line 1" 
+                                               class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                        <input type="text" name="address_line2" placeholder="Address Line 2 (Optional)" 
+                                               class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                        <input type="text" name="city" placeholder="City" 
+                                               class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                        <input type="text" name="state" placeholder="State" 
+                                               class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                        <input type="text" name="postal_code" placeholder="Postal Code" 
+                                               class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                        <input type="text" name="country" placeholder="Country" 
+                                               class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                    </div>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="is_default" class="rounded text-blue-600">
+                                        <span class="ml-2 text-gray-600">Set as default address</span>
+                                    </label>
+                                    <div class="flex space-x-4">
+                                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                                            Save Address
+                                        </button>
+                                        <button type="button" onclick="hideAddAddress()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div id="security" class="tab-content hidden">
+                        <div class="space-y-6">
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                                <div class="flex">
+                                    <i class="fas fa-shield-alt text-yellow-600 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium">Security Tips</p>
+                                        <p class="text-sm text-gray-600">Use a strong password and enable two-factor authentication for extra security.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <form class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded text-blue-600">
+                                        <span class="ml-2 text-gray-600">Enable Two-Factor Authentication</span>
+                                    </label>
+                                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                                        Update Password
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Preferences Tab -->
+                    <div id="preferences" class="tab-content hidden">
+                        <div class="space-y-6">
                             <div>
-                                <p class="font-semibold">{{ address.address_line1 }}</p>
-                                {% if address.address_line2 %}
-                                    <p class="text-gray-600">{{ address.address_line2 }}</p>
-                                {% endif %}
-                                <p class="text-gray-600">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
-                                <p class="text-gray-600">{{ address.country }}</p>
-                                {% if address.is_default %}
-                                    <span class="inline-block mt-2 text-xs bg-blue-500 text-white px-2 py-1 rounded">Default</span>
-                                {% endif %}
+                                <h4 class="font-semibold mb-4">Notification Preferences</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <p class="font-medium">Email Notifications</p>
+                                            <p class="text-sm text-gray-500">Receive updates via email</p>
+                                        </div>
+                                        <input type="checkbox" checked class="toggle">
+                                    </label>
+                                    <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <p class="font-medium">SMS Alerts</p>
+                                            <p class="text-sm text-gray-500">Get text messages for status updates</p>
+                                        </div>
+                                        <input type="checkbox" class="toggle">
+                                    </label>
+                                    <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div>
+                                            <p class="font-medium">Push Notifications</p>
+                                            <p class="text-sm text-gray-500">Browser notifications</p>
+                                        </div>
+                                        <input type="checkbox" checked class="toggle">
+                                    </label>
+                                </div>
                             </div>
-                            <div class="flex space-x-2">
-                                {% if not address.is_default %}
-                                <a href="{% url 'accounts:set_default_address' address.id %}" class="text-green-600 hover:text-green-800">
-                                    <i class="fas fa-check"></i>
-                                </a>
-                                {% endif %}
-                                <a href="{% url 'accounts:delete_address' address.id %}" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                            
+                            <div>
+                                <h4 class="font-semibold mb-4">Language & Region</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <select class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                        <option>English (US)</option>
+                                        <option>Spanish</option>
+                                        <option>French</option>
+                                        <option>German</option>
+                                    </select>
+                                    <select class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600">
+                                        <option>United States</option>
+                                        <option>Canada</option>
+                                        <option>United Kingdom</option>
+                                        <option>Australia</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-end">
+                                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                                    Save Preferences
+                                </button>
                             </div>
                         </div>
                     </div>
-                    {% empty %}
-                    <p class="text-gray-500 text-center">No addresses saved yet.</p>
-                    {% endfor %}
-                </div>
-
-                <!-- Hidden Address Form -->
-                <div id="address-form" class="hidden mt-6 border-t pt-4">
-                    <h3 class="font-semibold mb-4">Add New Address</h3>
-                    <form method="post" action="{% url 'accounts:add_address' %}">
-                        {% csrf_token %}
-                        {{ address_form|crispy }}
-                        <div class="mt-4 flex space-x-2">
-                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                Save Address
-                            </button>
-                            <button type="button" onclick="hideAddressForm()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -120,12 +344,39 @@
 </div>
 
 <script>
-function showAddressForm() {
-    document.getElementById('address-form').classList.remove('hidden');
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName).classList.remove('hidden');
+    
+    // Update tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('border-blue-600', 'text-blue-600');
+        button.classList.add('border-transparent', 'text-gray-500');
+    });
+    
+    // Highlight active tab
+    event.target.classList.add('border-blue-600', 'text-blue-600');
+    event.target.classList.remove('border-transparent', 'text-gray-500');
 }
 
-function hideAddressForm() {
-    document.getElementById('address-form').classList.add('hidden');
+function showAddAddress() {
+    document.getElementById('addAddressForm').classList.remove('hidden');
 }
+
+function hideAddAddress() {
+    document.getElementById('addAddressForm').classList.add('hidden');
+}
+
+// Toggle switches styling
+document.querySelectorAll('.toggle').forEach(toggle => {
+    toggle.addEventListener('change', function() {
+        // Add custom toggle styling if needed
+    });
+});
 </script>
 {% endblock %}
