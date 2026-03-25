@@ -7,4 +7,16 @@ django-allauth==0.54.0
 gunicorn==21.2.0
 dj-database-url==2.0.0
 psycopg2-binary==2.9.9
-crispy-tailwind-1.0.3
+crispy-tailwind
+
+# WSGI Servers
+gunicorn==21.2.0
+uwsgi==2.0.22
+
+# ASGI Servers
+daphne==4.0.0
+uvicorn==0.24.0
+
+# Optional: For WebSocket support
+channels==4.0.0
+channels-redis==4.1.0
