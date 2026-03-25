@@ -13,8 +13,5 @@ def services(request):
 def contact(request):
     return render(request, 'landing/contact.html')
 
-def tracking_page(request):
-    return render(request, 'landing/tracking.html')
-
 def rates(request):
     return render(request, 'landing/rates.html')

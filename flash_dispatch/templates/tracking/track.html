@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Track Your Shipment - Flash Dispatch{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tracking-progress-bar {
+        transition: width 0.6s ease;
+    }
+    .status-step {
+        transition: all 0.3s ease;
+    }
+    .status-step.active {
+        background-color: #2563eb;
+        border-color: #2563eb;
+        color: white;
+        transform: scale(1.1);
+    }
+    .status-step.completed {
+        background-color: #10b981;
+        border-color: #10b981;
+        color: white;
+    }
+    .timeline-item {
+        position: relative;
+        padding-left: 2rem;
+        padding-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 0.5rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, #2563eb, #10b981);
+    }
+    .timeline-item:last-child::before {
+        display: none;
+    }
+    .timeline-dot {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #2563eb;
+        border: 2px solid white;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    .timeline-dot.completed {
+        background: #10b981;
+    }
+    .animate-pulse-slow {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gray-100 min-h-screen py-12">
+    <div class="container mx-auto px-4 max-w-5xl">
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4">Track Your Shipment</h1>
+            <p class="text-gray-600 text-lg">Enter your tracking number to get real-time updates on your package</p>
+        </div>
+
+        <!-- Tracking Form -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <form method="get" action="{% url 'tracking:track' %}" class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tracking Number</label>
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" 
+                               name="tracking" 
+                               value="{{ tracking_number }}"
+                               placeholder="Enter tracking number (e.g., FD1234567890)"
+                               class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                               required>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" 
+                            class="w-full md:w-auto bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                        <i class="fas fa-search mr-2"></i>Track Package
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-4 text-center text-sm text-gray-500">
+                <i class="fas fa-info-circle mr-1"></i>
+                Example tracking numbers: FD1234567890, FD1234567891, FD1234567892
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-8">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                <div>
+                    <p class="text-red-700 font-medium">{{ error }}</p>
+                    <p class="text-red-600 text-sm mt-1">Please check the tracking number and try again.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Tracking Results -->
+        {% if shipment %}
+        <div class="space-y-6">
+            <!-- Shipment Status Card -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <!-- Status Header -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div>
+                            <p class="text-blue-100 text-sm mb-1">Tracking Number</p>
+                            <h2 class="text-2xl font-mono font-bold text-white">{{ shipment.tracking_number }}</h2>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold 
+                                {% if shipment.status == 'delivered' %}bg-green-500 text-white
+                                {% elif shipment.status == 'in_transit' %}bg-blue-500 text-white
+                                {% elif shipment.status == 'out_for_delivery' %}bg-purple-500 text-white
+                                {% elif shipment.status == 'picked_up' %}bg-indigo-500 text-white
+                                {% else %}bg-yellow-500 text-white{% endif %}">
+                                <i class="fas 
+                                    {% if shipment.status == 'delivered' %}fa-check-circle
+                                    {% elif shipment.status == 'in_transit' %}fa-truck
+                                    {% elif shipment.status == 'out_for_delivery' %}fa-truck-fast
+                                    {% elif shipment.status == 'picked_up' %}fa-box-open
+                                    {% else %}fa-clock{% endif %} mr-2"></i>
+                                {{ shipment.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="px-6 py-4 border-b">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <span>Order Placed</span>
+                        <span>Picked Up</span>
+                        <span>In Transit</span>
+                        <span>Out for Delivery</span>
+                        <span>Delivered</span>
+                    </div>
+                    <div class="relative">
+                        <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                            <div class="tracking-progress-bar shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"
+                                 style="width: {{ status_percentage }}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipment Info Grid -->
+                <div class="grid md:grid-cols-2 gap-6 p-6 border-b">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-user text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Sender</p>
+                            <p class="font-semibold">{{ shipment.sender_name }}</p>
+                            <p class="text-sm text-gray-600">{{ shipment.sender_address }}</p>
+                            <p class="text-sm text-gray-600">{{ shipment.sender_phone }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-user-tie text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Recipient</p>
+                            <p class="font-semibold">{{ shipment.recipient_name }}</p>
+                            <p class="text-sm text-gray-600">{{ shipment.recipient_address }}</p>
+                            <p class="text-sm text-gray-600">{{ shipment.recipient_phone }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-box text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Package Details</p>
+                            <p class="font-semibold">Weight: {{ shipment.weight }} kg</p>
+                            <p class="text-sm text-gray-600">Dimensions: {{ shipment.dimensions }}</p>
+                            <p class="text-sm text-gray-600">Service: {{ shipment.get_service_type_display }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-calendar-alt text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Estimated Delivery</p>
+                            <p class="font-semibold text-green-600">{{ shipment.estimated_delivery|date:"l, F j, Y" }}</p>
+                            <p class="text-sm text-gray-600">Created: {{ shipment.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking Timeline -->
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h3 class="text-xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-history text-blue-600 mr-3"></i>
+                    Tracking History
+                </h3>
+                
+                {% if tracking_updates %}
+                <div class="relative">
+                    {% for update in tracking_updates %}
+                    <div class="timeline-item">
+                        <div class="timeline-dot {% if forloop.first %}completed{% endif %}"></div>
+                        <div class="ml-4">
+                            <div class="flex flex-wrap justify-between items-start mb-2">
+                                <h4 class="font-semibold text-lg">{{ update.status }}</h4>
+                                <span class="text-sm text-gray-500">{{ update.timestamp|date:"F j, Y, g:i a" }}</span>
+                            </div>
+                            <p class="text-gray-600 mb-1">
+                                <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>
+                                {{ update.location }}
+                            </p>
+                            <p class="text-gray-500 text-sm">{{ update.description }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <i class="fas fa-box-open text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">No tracking updates available yet.</p>
+                    <p class="text-gray-400 text-sm mt-2">Updates will appear once your package is processed.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid md:grid-cols-3 gap-4">
+                <button onclick="getNotifications()" 
+                        class="flex items-center justify-center space-x-2 bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-bell text-blue-600"></i>
+                    <span>Get Notifications</span>
+                </button>
+                <button onclick="window.print()" 
+                        class="flex items-center justify-center space-x-2 bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-print text-blue-600"></i>
+                    <span>Print Details</span>
+                </button>
+                <button onclick="shareTracking()" 
+                        class="flex items-center justify-center space-x-2 bg-white border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition">
+                    <i class="fas fa-share-alt text-blue-600"></i>
+                    <span>Share Tracking</span>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Share Modal -->
+<div id="shareModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Share Tracking Information</h3>
+            <button onclick="closeShareModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tracking Number</label>
+                <div class="flex">
+                    <input type="text" id="trackingNumber" value="{{ shipment.tracking_number }}" readonly 
+                           class="flex-1 px-4 py-2 bg-gray-100 border rounded-l-lg">
+                    <button onclick="copyTrackingNumber()" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Share Link</label>
+                <div class="flex">
+                    <input type="text" id="shareLink" value="{{ request.build_absolute_uri }}?tracking={{ shipment.tracking_number }}" readonly 
+                           class="flex-1 px-4 py-2 bg-gray-100 border rounded-l-lg text-sm">
+                    <button onclick="copyShareLink()" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div class="pt-4">
+                <p class="text-sm text-gray-600 mb-3">Or share via:</p>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}?tracking={{ shipment.tracking_number }}" 
+                       target="_blank" class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-700">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text=Track%20your%20shipment%20{{ shipment.tracking_number }}%20&url={{ request.build_absolute_uri|urlencode }}?tracking={{ shipment.tracking_number }}" 
+                       target="_blank" class="bg-blue-400 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-500">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://wa.me/?text=Track%20your%20shipment%20{{ shipment.tracking_number }}%20{{ request.build_absolute_uri|urlencode }}?tracking={{ shipment.tracking_number }}" 
+                       target="_blank" class="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-green-600">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="mailto:?subject=Track Your Shipment&body=Track your shipment {{ shipment.tracking_number }} at {{ request.build_absolute_uri|urlencode }}?tracking={{ shipment.tracking_number }}" 
+                       class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-600">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Tracking page specific functions
+function getNotifications() {
+    if ('Notification' in window) {
+        Notification.requestPermission().then(function(permission) {
+            if (permission === 'granted') {
+                new Notification('Flash Dispatch', {
+                    body: 'You will receive updates for shipment {{ shipment.tracking_number }}',
+                    icon: '/static/images/logo.png'
+                });
+                showNotification('Notifications enabled!', 'success');
+            }
+        });
+    } else {
+        showNotification('Your browser does not support notifications', 'error');
+    }
+}
+
+function shareTracking() {
+    document.getElementById('shareModal').classList.remove('hidden');
+    document.getElementById('shareModal').style.display = 'flex';
+}
+
+function closeShareModal() {
+    document.getElementById('shareModal').classList.add('hidden');
+    document.getElementById('shareModal').style.display = 'none';
+}
+
+function copyTrackingNumber() {
+    const trackingNumber = document.getElementById('trackingNumber');
+    trackingNumber.select();
+    document.execCommand('copy');
+    showNotification('Tracking number copied!', 'success');
+}
+
+function copyShareLink() {
+    const shareLink = document.getElementById('shareLink');
+    shareLink.select();
+    document.execCommand('copy');
+    showNotification('Share link copied!', 'success');
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        info: 'bg-blue-500'
+    };
+    notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>${message}`;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('shareModal');
+    if (modal && !modal.classList.contains('hidden')) {
+        const modalContent = modal.querySelector('.bg-white');
+        if (modalContent && !modalContent.contains(event.target) && !event.target.closest('button')) {
+            closeShareModal();
+        }
+    }
+});
+
+// Auto-refresh tracking data every 30 seconds
+{% if shipment %}
+let refreshInterval = setInterval(function() {
+    fetch(`/api/track/{{ shipment.tracking_number }}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.status_code !== '{{ shipment.status }}') {
+                location.reload();
+            }
+        })
+        .catch(error => console.log('Auto-refresh error:', error));
+}, 30000);
+{% endif %}
+</script>
+{% endblock %}
