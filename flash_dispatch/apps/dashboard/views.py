@@ -45,3 +45,9 @@ def shipment_detail(request, tracking_number):
         'shipment': shipment,
         'tracking_updates': tracking_updates
     })
+
+
+@login_required
+def shipment_list(request):
+    shipments = Shipment.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'dashboard/shipments.html', {'shipments': shipments})
