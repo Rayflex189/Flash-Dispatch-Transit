@@ -8,6 +8,7 @@ from apps.accounts.models import User
 from django.core.exceptions import PermissionDenied
 import random
 import string
+from datetime import datetime
 
 def generate_tracking_number():
     """Generate a unique tracking number"""
@@ -50,6 +51,7 @@ def home(request):
         'in_transit': in_transit,
         'pending_shipments': pending,
         'recent_activity': recent_activity,
+        'now': timezone.now()
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -166,6 +168,7 @@ def shipment_detail(request, tracking_number):
         'shipment': shipment,
         'tracking_updates': tracking_updates,
         'status_percentage': status_percentage,
+        'now': timezone.now()
     }
     return render(request, 'dashboard/shipment_detail.html', context)
 
@@ -184,11 +187,15 @@ def shipment_list(request):
     if status_filter:
         shipments = shipments.filter(status=status_filter)
     
+    # Calculate counts for stats
+    total_count = shipments.count()
+    
     context = {
         'shipments': shipments,
-        'total_count': shipments.count(),
+        'total_count': total_count,
         'status_filter': status_filter,
         'status_choices': Shipment.STATUS_CHOICES,
+        'now': timezone.now()
     }
     return render(request, 'dashboard/shipments.html', context)
 
@@ -211,7 +218,8 @@ def update_shipment_status(request, tracking_number):
                 shipment=shipment,
                 status=new_status,
                 location=location or 'In transit',
-                description=description or f'Shipment status updated to {dict(Shipment.STATUS_CHOICES)[new_status]}'
+                description=description or f'Shipment status updated to {dict(Shipment.STATUS_CHOICES)[new_status]}',
+                timestamp=timezone.now()
             )
             
             messages.success(request, f'Shipment {shipment.tracking_number} status updated successfully!')

@@ -28,19 +28,33 @@
             <div class="bg-white rounded-lg p-4 shadow">
                 <p class="text-gray-500 text-sm">In Transit</p>
                 <p class="text-2xl font-bold text-blue-600">
-                    {{ shipments|dictsortreversed:"status"|selectattr:"status","equalto","in_transit"|length }}
+                    {% with in_transit_count=0 %}
+                        {% for shipment in shipments %}
+                            {% if shipment.status == 'in_transit' %}
+                                {{ forloop.counter }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}
                 </p>
             </div>
             <div class="bg-white rounded-lg p-4 shadow">
                 <p class="text-gray-500 text-sm">Delivered</p>
                 <p class="text-2xl font-bold text-green-600">
-                    {{ shipments|dictsortreversed:"status"|selectattr:"status","equalto","delivered"|length }}
+                    {% for shipment in shipments %}
+                        {% if shipment.status == 'delivered' %}
+                            {{ forloop.counter }}
+                        {% endif %}
+                    {% endfor %}
                 </p>
             </div>
             <div class="bg-white rounded-lg p-4 shadow">
                 <p class="text-gray-500 text-sm">Pending</p>
                 <p class="text-2xl font-bold text-yellow-600">
-                    {{ shipments|dictsortreversed:"status"|selectattr:"status","equalto","pending"|length }}
+                    {% for shipment in shipments %}
+                        {% if shipment.status == 'pending' %}
+                            {{ forloop.counter }}
+                        {% endif %}
+                    {% endfor %}
                 </p>
             </div>
         </div>
@@ -84,7 +98,7 @@
                             <td class="px-6 py-4">
                                 <div>
                                     <p class="font-medium">{{ shipment.recipient_name }}</p>
-                                    <p class="text-sm text-gray-500">{{ shipment.recipient_city|default:"" }}</p>
+                                    <p class="text-sm text-gray-500">{{ shipment.recipient_address|truncatechars:30 }}</p>
                                 </div>
                             </td>
                             <td class="px-6 py-4">

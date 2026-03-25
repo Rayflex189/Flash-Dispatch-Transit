@@ -14,10 +14,12 @@
                     <p class="text-blue-100">Manage your shipments, track packages, and view analytics</p>
                 </div>
                 <div class="mt-4 md:mt-0">
+                    {% if user.is_staff %}
                     <a href="{% url 'dashboard:create_shipment' %}" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition inline-flex items-center">
                         <i class="fas fa-plus mr-2"></i>
                         Create New Shipment
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -28,7 +30,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 text-sm">Total Shipments</p>
-                        <p class="text-3xl font-bold">{{ total_shipments|default:"0" }}</p>
+                        <p class="text-3xl font-bold">{{ total_shipments }}</p>
                         <p class="text-sm text-green-600 mt-2"><i class="fas fa-arrow-up"></i> +12% from last month</p>
                     </div>
                     <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -41,7 +43,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 text-sm">In Transit</p>
-                        <p class="text-3xl font-bold">{{ in_transit|default:"0" }}</p>
+                        <p class="text-3xl font-bold">{{ in_transit }}</p>
                         <p class="text-sm text-orange-600 mt-2"><i class="fas fa-truck"></i> On the move</p>
                     </div>
                     <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
@@ -54,7 +56,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 text-sm">Delivered</p>
-                        <p class="text-3xl font-bold">{{ delivered_shipments|default:"0" }}</p>
+                        <p class="text-3xl font-bold">{{ delivered_shipments }}</p>
                         <p class="text-sm text-green-600 mt-2"><i class="fas fa-check-circle"></i> Successfully delivered</p>
                     </div>
                     <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
@@ -67,7 +69,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 text-sm">Pending</p>
-                        <p class="text-3xl font-bold">{{ pending_shipments|default:"0" }}</p>
+                        <p class="text-3xl font-bold">{{ pending_shipments }}</p>
                         <p class="text-sm text-yellow-600 mt-2"><i class="fas fa-clock"></i> Awaiting processing</p>
                     </div>
                     <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center">
@@ -111,7 +113,7 @@
                                     <td class="px-6 py-4">
                                         <div>
                                             <p class="font-medium">{{ shipment.recipient_name }}</p>
-                                            <p class="text-sm text-gray-500">{{ shipment.recipient_city }}</p>
+                                            <p class="text-sm text-gray-500">{{ shipment.recipient_address|truncatechars:30 }}</p>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
@@ -130,6 +132,10 @@
                                         {% elif shipment.status == 'out_for_delivery' %}
                                             <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">
                                                 <i class="fas fa-truck-fast mr-1"></i>Out for Delivery
+                                            </span>
+                                        {% elif shipment.status == 'picked_up' %}
+                                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-semibold">
+                                                <i class="fas fa-box-open mr-1"></i>Picked Up
                                             </span>
                                         {% else %}
                                             <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold">
@@ -152,9 +158,11 @@
                                     <td colspan="5" class="px-6 py-8 text-center text-gray-500">
                                         <i class="fas fa-box-open text-4xl mb-3 text-gray-300"></i>
                                         <p>No shipments yet</p>
+                                        {% if user.is_staff %}
                                         <a href="{% url 'dashboard:create_shipment' %}" class="mt-2 inline-block text-blue-600 hover:text-blue-700">
                                             Create your first shipment
                                         </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -180,7 +188,7 @@
                                 {% elif activity.status == 'in_transit' %}
                                     <i class="fas fa-truck text-blue-600"></i>
                                 {% else %}
-                                    <i class="fas fa-circle text-gray-600"></i>
+                                    <i class="fas fa-clock text-yellow-600"></i>
                                 {% endif %}
                             </div>
                             <div class="flex-1">
@@ -215,7 +223,7 @@
             </div>
         </div>
 
-        <!-- Shipping Chart -->
+        <!-- Shipping Chart and Popular Destinations -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="bg-white rounded-xl shadow-lg p-6">
                 <h2 class="text-lg font-semibold mb-4">Shipping Activity</h2>
@@ -285,7 +293,15 @@ new Chart(ctx, {
         },
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
             }
         }
     }
@@ -294,8 +310,26 @@ new Chart(ctx, {
 function quickTrack() {
     const trackingNumber = document.getElementById('quick-track').value;
     if (trackingNumber) {
-        window.location.href = `/tracking/${trackingNumber}/`;
+        window.location.href = `/tracking/?tracking=${trackingNumber}`;
+    } else {
+        showNotification('Please enter a tracking number', 'error');
     }
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        info: 'bg-blue-500'
+    };
+    notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in`;
+    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>${message}`;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 </script>
 {% endblock %}
