@@ -21,6 +21,10 @@ INSTALLED_APPS = [
     'apps.dashboard',
     'apps.landing',
     'apps.api',
+
+    # Third party
+    'crispy_forms',
+    'crispy_tailwind',
 ]
 
 MIDDLEWARE = [
