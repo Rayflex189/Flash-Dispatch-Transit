@@ -10,5 +10,10 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
     path('profile/add-address/', views.add_address, name='add_address'),
+    path('profile/edit-address/<int:address_id>/', views.edit_address, name='edit_address'),
     path('profile/delete-address/<int:address_id>/', views.delete_address, name='delete_address'),
+    path('profile/set-default-address/<int:address_id>/', views.set_default_address, name='set_default_address'),
+    path('profile/change-password/', views.change_password, name='change_password'),
+    path('profile/update-notifications/', views.update_notifications, name='update_notifications'),
+    path('profile/update-preferences/', views.update_preferences, name='update_preferences'),
 ]
