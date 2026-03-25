@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}Create New Shipment{% endblock %}
 
@@ -12,39 +11,8 @@
             <p class="text-gray-600">Fill in the details below to create a new consignment</p>
         </div>
 
-        <!-- Progress Steps -->
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">1</div>
-                    <div class="ml-3">
-                        <p class="font-semibold">Shipment Details</p>
-                        <p class="text-sm text-gray-500">Package information</p>
-                    </div>
-                </div>
-                <div class="flex-1 mx-4 h-1 bg-gray-200">
-                    <div class="w-1/3 h-1 bg-blue-600"></div>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-bold">2</div>
-                    <div class="ml-3">
-                        <p class="font-semibold text-gray-400">Sender Info</p>
-                        <p class="text-sm text-gray-400">Your details</p>
-                    </div>
-                </div>
-                <div class="flex-1 mx-4 h-1 bg-gray-200"></div>
-                <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-bold">3</div>
-                    <div class="ml-3">
-                        <p class="font-semibold text-gray-400">Recipient Info</p>
-                        <p class="text-sm text-gray-400">Delivery details</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Form -->
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Form -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4">
                 <h2 class="text-xl font-semibold text-white">Shipment Information</h2>
             </div>
@@ -61,8 +29,7 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Package Type *</label>
-                            <select name="package_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
-                                <option value="">Select package type</option>
+                            <select name="package_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
                                 <option value="document">Document</option>
                                 <option value="parcel">Parcel</option>
                                 <option value="box">Box</option>
@@ -72,24 +39,23 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Weight (kg) *</label>
-                            <input type="number" step="0.1" name="weight" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            <input type="number" step="0.1" name="weight" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Dimensions (cm) *</label>
                             <div class="flex space-x-2">
-                                <input type="number" placeholder="L" name="length" class="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
-                                <input type="number" placeholder="W" name="width" class="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
-                                <input type="number" placeholder="H" name="height" class="w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                <input type="number" placeholder="L" name="length" class="w-1/3 px-4 py-2 border rounded-lg">
+                                <input type="number" placeholder="W" name="width" class="w-1/3 px-4 py-2 border rounded-lg">
+                                <input type="number" placeholder="H" name="height" class="w-1/3 px-4 py-2 border rounded-lg">
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Service Type *</label>
-                            <select name="service_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
-                                <option value="">Select service</option>
+                            <select name="service_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
                                 <option value="standard">Standard Delivery (3-5 days)</option>
                                 <option value="express">Express Delivery (1-2 days)</option>
-                                <option value="overnight">Overnight</option>
-                                <option value="international">International</option>
+                                <option value="overnight">Overnight (Next day)</option>
+                                <option value="international">International (5-10 days)</option>
                             </select>
                         </div>
                     </div>
@@ -104,26 +70,20 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                            <input type="text" name="sender_name" value="{{ user.get_full_name }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            <input type="text" name="sender_name" value="{{ user.get_full_name }}" required class="w-full px-4 py-2 border rounded-lg">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                            <input type="tel" name="sender_phone" value="{{ user.phone_number }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            <input type="tel" name="sender_phone" value="{{ user.phone_number }}" required class="w-full px-4 py-2 border rounded-lg">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                            <input type="email" name="sender_email" value="{{ user.email }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            <input type="email" name="sender_email" value="{{ user.email }}" required class="w-full px-4 py-2 border rounded-lg">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
-                            <textarea name="sender_address" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">{{ user.address }}</textarea>
+                            <textarea name="sender_address" rows="3" required class="w-full px-4 py-2 border rounded-lg">{{ user.address }}</textarea>
                         </div>
-                    </div>
-                    <div class="mt-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="save_sender" class="rounded text-blue-600">
-                            <span class="ml-2 text-sm text-gray-600">Save sender information for future shipments</span>
-                        </label>
                     </div>
                 </div>
 
@@ -136,19 +96,19 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                            <input type="text" name="recipient_name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            <input type="text" name="recipient_name" required class="w-full px-4 py-2 border rounded-lg">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                            <input type="tel" name="recipient_phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            <input type="tel" name="recipient_phone" required class="w-full px-4 py-2 border rounded-lg">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                            <input type="email" name="recipient_email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            <input type="email" name="recipient_email" required class="w-full px-4 py-2 border rounded-lg">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
-                            <textarea name="recipient_address" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"></textarea>
+                            <textarea name="recipient_address" rows="3" required class="w-full px-4 py-2 border rounded-lg"></textarea>
                         </div>
                     </div>
                 </div>
@@ -159,71 +119,37 @@
                         <i class="fas fa-cog text-blue-600 mr-2"></i>
                         Additional Options
                     </h3>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <label class="flex items-center p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
                             <input type="checkbox" name="insurance" class="rounded text-blue-600">
                             <div class="ml-3">
                                 <p class="font-medium">Insurance</p>
-                                <p class="text-sm text-gray-500">Protect your package up to $1000</p>
+                                <p class="text-sm text-gray-500">+$5.00</p>
                             </div>
                         </label>
-                        <label class="flex items-center p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
                             <input type="checkbox" name="signature" class="rounded text-blue-600">
                             <div class="ml-3">
                                 <p class="font-medium">Signature Required</p>
-                                <p class="text-sm text-gray-500">Recipient must sign for delivery</p>
+                                <p class="text-sm text-gray-500">+$3.00</p>
                             </div>
                         </label>
-                        <label class="flex items-center p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                            <input type="checkbox" name="weekend" class="rounded text-blue-600">
-                            <div class="ml-3">
-                                <p class="font-medium">Weekend Delivery</p>
-                                <p class="text-sm text-gray-500">Deliver on Saturday or Sunday</p>
-                            </div>
-                        </label>
-                        <label class="flex items-center p-4 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
                             <input type="checkbox" name="fragile" class="rounded text-blue-600">
                             <div class="ml-3">
                                 <p class="font-medium">Fragile Handling</p>
-                                <p class="text-sm text-gray-500">Extra care for fragile items</p>
+                                <p class="text-sm text-gray-500">+$8.00</p>
                             </div>
                         </label>
-                    </div>
-                </div>
-
-                <!-- Price Summary -->
-                <div class="bg-gray-50 p-6 rounded-lg mb-6">
-                    <h3 class="text-lg font-semibold mb-4">Price Summary</h3>
-                    <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Base Price</span>
-                            <span class="font-medium">$25.00</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Weight Surcharge</span>
-                            <span class="font-medium">$0.00</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Insurance</span>
-                            <span class="font-medium">$0.00</span>
-                        </div>
-                        <div class="border-t pt-2 mt-2">
-                            <div class="flex justify-between font-bold">
-                                <span>Total</span>
-                                <span class="text-blue-600">$25.00</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="flex justify-end space-x-4">
-                    <button type="button" onclick="window.history.back()" 
-                            class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                    <a href="{% url 'dashboard:home' %}" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                         Cancel
-                    </button>
-                    <button type="submit" 
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+                    </a>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
                         Create Shipment
                     </button>
                 </div>
@@ -233,28 +159,12 @@
 </div>
 
 <script>
-// Form validation and price calculation
 document.getElementById('shipmentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Show success message
-    showNotification('Shipment created successfully!', 'success');
-    
-    // Simulate redirect
-    setTimeout(() => {
-        window.location.href = "{% url 'dashboard:home' %}";
-    }, 2000);
+    const weight = document.querySelector('input[name="weight"]').value;
+    if (weight && parseFloat(weight) <= 0) {
+        e.preventDefault();
+        alert('Please enter a valid weight greater than 0');
+    }
 });
-
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
-    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>${message}`;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
 </script>
 {% endblock %}
