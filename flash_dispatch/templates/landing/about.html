@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Flash Dispatch{% endblock %}
+
+{% block extra_css %}
+<style>
+    .value-card {
+        transition: all 0.3s ease;
+    }
+    .value-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .team-card {
+        transition: transform 0.3s ease;
+    }
+    .team-card:hover {
+        transform: translateY(-5px);
+    }
+    .counter {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #2563eb;
+    }
+    .timeline-item {
+        position: relative;
+        padding-left: 2rem;
+        padding-bottom: 2rem;
+    }
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 0.5rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, #2563eb, #10b981);
+    }
+    .timeline-item:last-child::before {
+        display: none;
+    }
+    .timeline-dot {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #2563eb;
+        border: 2px solid white;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-r from-blue-600 to-blue-800 py-20">
+    <div class="absolute inset-0 bg-black opacity-30"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center text-white max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">About Flash Dispatch</h1>
+            <p class="text-xl text-blue-100 mb-8">Revolutionizing logistics with speed, reliability, and innovation since 2024</p>
+        </div>
+    </div>
+</section>
+
+<!-- Company Story Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold mb-6">Our Story</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Founded in 2024, Flash Dispatch emerged from a simple vision: to make shipping faster, more reliable, and completely transparent. What started as a small local courier service has grown into a trusted logistics partner serving thousands of customers nationwide.
+                </p>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    We recognized that traditional courier services were plagued by delays, poor tracking, and hidden fees. Our mission was to change that by leveraging cutting-edge technology and a customer-first approach.
+                </p>
+                <p class="text-gray-600 leading-relaxed">
+                    Today, we're proud to offer comprehensive logistics solutions that combine speed, security, and simplicity. From same-day deliveries to international shipping, we handle every package with the same care and attention to detail.
+                </p>
+            </div>
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-8 text-white">
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold mb-2">50K+</div>
+                        <div class="text-blue-100">Packages Delivered</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold mb-2">100+</div>
+                        <div class="text-blue-100">Cities Served</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold mb-2">99.9%</div>
+                        <div class="text-blue-100">On-Time Delivery</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold mb-2">24/7</div>
+                        <div class="text-blue-100">Customer Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission & Vision -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 card-hover">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-bullseye text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Our Mission</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    To provide seamless, reliable, and transparent logistics solutions that empower businesses and individuals to ship with confidence. We're committed to delivering excellence in every package we handle.
+                </p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-8 card-hover">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-eye text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Our Vision</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    To become the world's most trusted logistics partner, known for innovation, reliability, and exceptional customer service. We envision a world where shipping is effortless and completely transparent.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Values -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Our Core Values</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">The principles that guide everything we do</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="value-card bg-gray-50 rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-bolt text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Speed</h3>
+                <p class="text-gray-600">Fast and efficient delivery, always on time</p>
+            </div>
+            <div class="value-card bg-gray-50 rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-2xl text-green-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Reliability</h3>
+                <p class="text-gray-600">Your packages are safe and secure with us</p>
+            </div>
+            <div class="value-card bg-gray-50 rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-chart-line text-2xl text-purple-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Innovation</h3>
+                <p class="text-gray-600">Using cutting-edge technology for better service</p>
+            </div>
+            <div class="value-card bg-gray-50 rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-heart text-2xl text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Customer First</h3>
+                <p class="text-gray-600">Your satisfaction is our top priority</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Company Timeline -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Our Journey</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Key milestones in our company's history</p>
+        </div>
+        
+        <div class="max-w-3xl mx-auto">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-xl mb-2">2024 - Company Founded</h3>
+                    <p class="text-gray-600">Flash Dispatch was established with a vision to revolutionize the courier industry.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-xl mb-2">2024 - Technology Launch</h3>
+                    <p class="text-gray-600">Launched our real-time tracking system and mobile app for customers.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-xl mb-2">2025 - Nationwide Expansion</h3>
+                    <p class="text-gray-600">Expanded services to 100+ cities across the United States.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="ml-4">
+                    <h3 class="font-bold text-xl mb-2">2025 - International Reach</h3>
+                    <p class="text-gray-600">Launched international shipping services to 50+ countries.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leadership Team -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Meet Our Leadership Team</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Experienced professionals dedicated to your success</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="team-card bg-gray-50 rounded-xl overflow-hidden shadow-lg">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-800 h-32"></div>
+                <div class="text-center px-6 pb-6">
+                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto -mt-12 mb-4 shadow-lg">
+                        <i class="fas fa-user-circle text-5xl text-blue-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-1">John Anderson</h3>
+                    <p class="text-blue-600 text-sm mb-3">CEO & Founder</p>
+                    <p class="text-gray-600 text-sm">20+ years in logistics industry. Passionate about innovation and customer service.</p>
+                </div>
+            </div>
+            
+            <div class="team-card bg-gray-50 rounded-xl overflow-hidden shadow-lg">
+                <div class="bg-gradient-to-r from-green-600 to-green-800 h-32"></div>
+                <div class="text-center px-6 pb-6">
+                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto -mt-12 mb-4 shadow-lg">
+                        <i class="fas fa-user-circle text-5xl text-green-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-1">Sarah Martinez</h3>
+                    <p class="text-green-600 text-sm mb-3">COO</p>
+                    <p class="text-gray-600 text-sm">Operations expert focused on efficiency and quality control.</p>
+                </div>
+            </div>
+            
+            <div class="team-card bg-gray-50 rounded-xl overflow-hidden shadow-lg">
+                <div class="bg-gradient-to-r from-purple-600 to-purple-800 h-32"></div>
+                <div class="text-center px-6 pb-6">
+                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto -mt-12 mb-4 shadow-lg">
+                        <i class="fas fa-user-circle text-5xl text-purple-600"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-1">Michael Chen</h3>
+                    <p class="text-purple-600 text-sm mb-3">CTO</p>
+                    <p class="text-gray-600 text-sm">Technology leader driving our digital transformation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Certifications & Awards -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Certifications & Recognition</h2>
+            <p class="text-gray-600">Proud to be recognized for excellence in logistics</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <i class="fas fa-certificate text-4xl text-blue-600 mb-3"></i>
+                <p class="font-semibold">ISO 9001:2025</p>
+                <p class="text-sm text-gray-600">Quality Management</p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-shield-alt text-4xl text-green-600 mb-3"></i>
+                <p class="font-semibold">GDP Certified</p>
+                <p class="text-sm text-gray-600">Good Distribution Practice</p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-leaf text-4xl text-green-600 mb-3"></i>
+                <p class="font-semibold">Green Logistics</p>
+                <p class="text-sm text-gray-600">Eco-Friendly Certified</p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-trophy text-4xl text-yellow-600 mb-3"></i>
+                <p class="font-semibold">Best Courier Service</p>
+                <p class="text-sm text-gray-600">2025 Award Winner</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="gradient-bg py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">Join the Flash Dispatch Family</h2>
+        <p class="text-xl text-blue-100 mb-8">Experience the difference of working with a logistics partner that truly cares</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="{% url 'accounts:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition inline-flex items-center">
+                <i class="fas fa-user-plus mr-2"></i>Create Account
+            </a>
+            <a href="{% url 'landing:contact' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition inline-flex items-center">
+                <i class="fas fa-envelope mr-2"></i>Contact Us
+            </a>
+        </div>
+    </div>
+c{% endblock %}

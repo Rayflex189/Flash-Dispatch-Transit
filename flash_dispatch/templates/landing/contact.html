@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Flash Dispatch{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-card {
+        transition: all 0.3s ease;
+    }
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .social-icon {
+        transition: all 0.3s ease;
+    }
+    .social-icon:hover {
+        transform: translateY(-3px);
+    }
+    .faq-item {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .faq-item:hover {
+        background-color: #f3f4f6;
+    }
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .faq-item.active .faq-answer {
+        max-height: 500px;
+        transition: max-height 0.5s ease-in;
+    }
+    .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-r from-blue-600 to-blue-800 py-20">
+    <div class="absolute inset-0 bg-black opacity-30"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center text-white max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
+            <p class="text-xl text-blue-100 mb-8">We're here to help. Reach out to us anytime, anywhere.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information Cards -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-3 gap-8 mb-12">
+            <div class="contact-card bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-phone-alt text-2xl text-white"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Phone Support</h3>
+                <p class="text-gray-600 mb-2">Available 24/7 for emergencies</p>
+                <p class="text-2xl font-bold text-blue-600">+1 (800) 123-4567</p>
+                <p class="text-sm text-gray-500 mt-2">Toll-Free</p>
+            </div>
+            
+            <div class="contact-card bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-envelope text-2xl text-white"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Email Support</h3>
+                <p class="text-gray-600 mb-2">Response within 24 hours</p>
+                <p class="text-lg font-semibold text-green-600">support@flashdispatch.com</p>
+                <p class="text-sm text-gray-500 mt-2">For business inquiries: sales@flashdispatch.com</p>
+            </div>
+            
+            <div class="contact-card bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-6 text-center">
+                <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-comments text-2xl text-white"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-2">Live Chat</h3>
+                <p class="text-gray-600 mb-2">Chat with our support team</p>
+                <button onclick="startChat()" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    Start Chat
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form and Map -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Contact Form -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-paper-plane text-blue-600 mr-3"></i>
+                    Send Us a Message
+                </h2>
+                
+                <form id="contactForm" method="post" action="{% url 'landing:contact' %}">
+                    {% csrf_token %}
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" name="name" required 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                            <input type="email" name="email" required 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" name="phone" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                            <select name="subject" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600">
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="shipment">Shipment Question</option>
+                                <option value="tracking">Tracking Issue</option>
+                                <option value="business">Business Partnership</option>
+                                <option value="complaint">Complaint</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                        <textarea name="message" rows="5" required 
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600"
+                                  placeholder="Please provide as much detail as possible..."></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="newsletter" class="rounded text-blue-600">
+                            <span class="ml-2 text-sm text-gray-600">Subscribe to our newsletter for updates and promotions</span>
+                        </label>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Send Message
+                    </button>
+                </form>
+                
+                <div class="mt-6 text-center text-sm text-gray-500">
+                    <i class="fas fa-lock mr-1"></i>
+                    Your information is secure and will not be shared
+                </div>
+            </div>
+            
+            <!-- Map and Location Info -->
+            <div>
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-6">
+                    <div class="h-64 bg-gray-200">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1x3024.2219901290355!2d-74.00369368400567!3d40.71312937933033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a316dbffd0b%3A0x6e52da152f0b5fa0!2s123%20Business%20Ave%2C%20New%20York%2C%20NY%2010001!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">Visit Our Headquarters</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-blue-600 mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium">Flash Dispatch Headquarters</p>
+                                <p class="text-gray-600">123 Business Avenue, Suite 100</p>
+                                <p class="text-gray-600">New York, NY 10001</p>
+                                <p class="text-gray-600">United States</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-blue-600 mr-3"></i>
+                            <div>
+                                <p class="font-medium">Office Hours</p>
+                                <p class="text-gray-600">Monday - Friday: 9:00 AM - 6:00 PM EST</p>
+                                <p class="text-gray-600">Saturday: 10:00 AM - 4:00 PM EST</p>
+                                <p class="text-gray-600">Sunday: Closed</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <i class="fas fa-phone-alt text-blue-600 mr-3"></i>
+                            <div>
+                                <p class="font-medium">Emergency Support</p>
+                                <p class="text-gray-600">Available 24/7: +1 (800) 123-4567</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Office Locations -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Our Global Presence</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Serving customers worldwide with strategically located offices</p>
+        </div>
+        
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="text-center p-4 hover:shadow-lg transition rounded-lg">
+                <i class="fas fa-city text-3xl text-blue-600 mb-3"></i>
+                <h3 class="font-bold">New York</h3>
+                <p class="text-sm text-gray-600">Headquarters</p>
+            </div>
+            <div class="text-center p-4 hover:shadow-lg transition rounded-lg">
+                <i class="fas fa-city text-3xl text-blue-600 mb-3"></i>
+                <h3 class="font-bold">Los Angeles</h3>
+                <p class="text-sm text-gray-600">West Coast Hub</p>
+            </div>
+            <div class="text-center p-4 hover:shadow-lg transition rounded-lg">
+                <i class="fas fa-city text-3xl text-blue-600 mb-3"></i>
+                <h3 class="font-bold">Chicago</h3>
+                <p class="text-sm text-gray-600">Midwest Hub</p>
+            </div>
+            <div class="text-center p-4 hover:shadow-lg transition rounded-lg">
+                <i class="fas fa-globe text-3xl text-blue-600 mb-3"></i>
+                <h3 class="font-bold">London</h3>
+                <p class="text-sm text-gray-600">European Hub</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Social Media Connect -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">Connect With Us</h2>
+        <p class="text-gray-600 mb-8">Follow us on social media for updates, promotions, and logistics tips</p>
+        
+        <div class="flex justify-center space-x-6">
+            <a href="#" class="social-icon bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-blue-700 transition">
+                <i class="fab fa-facebook-f text-xl"></i>
+            </a>
+            <a href="#" class="social-icon bg-blue-400 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-blue-500 transition">
+                <i class="fab fa-twitter text-xl"></i>
+            </a>
+            <a href="#" class="social-icon bg-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-pink-700 transition">
+                <i class="fab fa-instagram text-xl"></i>
+            </a>
+            <a href="#" class="social-icon bg-blue-700 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-blue-800 transition">
+                <i class="fab fa-linkedin-in text-xl"></i>
+            </a>
+            <a href="#" class="social-icon bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-green-700 transition">
+                <i class="fab fa-whatsapp text-xl"></i>
+            </a>
+            <a href="#" class="social-icon bg-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-red-700 transition">
+                <i class="fab fa-youtube text-xl"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+            <p class="text-gray-600">Find quick answers to common questions</p>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="faq-item border rounded-lg p-4">
+                <div class="flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                    <h3 class="font-semibold">How do I track my shipment?</h3>
+                    <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                </div>
+                <div class="faq-answer mt-2">
+                    <p class="text-gray-600">You can track your shipment using the tracking number provided in your confirmation email. Visit our tracking page and enter your tracking number for real-time updates.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item border rounded-lg p-4">
+                <div class="flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                    <h3 class="font-semibold">What is the estimated delivery time?</h3>
+                    <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                </div>
+                <div class="faq-answer mt-2">
+                    <p class="text-gray-600">Delivery times vary by service type: Standard (3-5 days), Express (1-2 days), Overnight (Next day), International (5-10 days). Exact estimates are provided when you create a shipment.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item border rounded-lg p-4">
+                <div class="flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                    <h3 class="font-semibold">Do you offer international shipping?</h3>
+                    <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                </div>
+                <div class="faq-answer mt-2">
+                    <p class="text-gray-600">Yes, we ship to over 100 countries worldwide. International shipping rates and delivery times vary by destination. Contact our support team for specific country inquiries.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item border rounded-lg p-4">
+                <div class="flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                    <h3 class="font-semibold">What is your return policy?</h3>
+                    <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                </div>
+                <div class="faq-answer mt-2">
+                    <p class="text-gray-600">We offer free returns within 14 days of delivery for eligible items. Contact our support team to initiate a return and we'll arrange pickup at no additional cost.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item border rounded-lg p-4">
+                <div class="flex justify-between items-center cursor-pointer" onclick="toggleFaq(this)">
+                    <h3 class="font-semibold">How do I file a claim for damaged goods?</h3>
+                    <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                </div>
+                <div class="faq-answer mt-2">
+                    <p class="text-gray-600">If your package arrives damaged, please contact our support team within 24 hours with photos of the damage. We'll process your claim and provide compensation based on your insurance coverage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function startChat() {
+    showNotification('Live chat feature coming soon!', 'info');
+}
+
+function toggleFaq(element) {
+    const faqItem = element.closest('.faq-item');
+    faqItem.classList.toggle('active');
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        info: 'bg-blue-500'
+    };
+    notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} mr-2"></i>${message}`;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+}
+
+// Handle form submission
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+    this.reset();
+});
+</script>
+{% endblock %}
