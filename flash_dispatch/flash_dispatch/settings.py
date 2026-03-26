@@ -87,9 +87,9 @@ ASGI_APPLICATION = 'flash_dispatch.asgi.application'
 # Format: postgresql://postgres:la9kHUBMebKul5WA@db.orokimgqkrwhhykregfu.supabase.co:5432/postgres
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:la9kHUBMebKul5WA@db.orokimgqkrwhhykregfu.supabase.co:5432/postgres',
+        default=config('DATABASE_URL'),
         conn_max_age=600,
-        ssl_require=True  # Required for Supabase
+        ssl_require=True
     )
 }
 
