@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third party apps
-    'crispy_forms',
-    'crispy_tailwind',
+    #'crispy_forms',
+    #'crispy_tailwind',
     'cloudinary',
     'cloudinary_storage',
     
@@ -148,8 +148,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 
 # Crispy forms configuration
-CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
-CRISPY_TEMPLATE_PACK = "tailwind"
+#CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+#CRISPY_TEMPLATE_PACK = "tailwind"
 
 # Authentication URLs
 LOGIN_URL = 'accounts:login'
