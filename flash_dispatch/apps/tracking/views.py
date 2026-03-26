@@ -14,6 +14,14 @@ def track_shipment(request):
             shipment = Shipment.objects.get(tracking_number=tracking_number.upper())
             # Get all tracking updates
             tracking_updates = shipment.updates.all().order_by('-timestamp')
+            
+            # Get document/image URL if available
+            document_url = None
+            if shipment.document_cloudinary_url:
+                document_url = shipment.document_cloudinary_url
+            elif shipment.document and hasattr(shipment.document, 'url'):
+                document_url = shipment.document.url
+                
         except Shipment.DoesNotExist:
             error = "No shipment found with this tracking number. Please check and try again."
     
@@ -21,22 +29,11 @@ def track_shipment(request):
         'shipment': shipment,
         'error': error,
         'tracking_number': tracking_number,
-        'tracking_updates': shipment.updates.all().order_by('-timestamp') if shipment else []
+        'tracking_updates': shipment.updates.all().order_by('-timestamp') if shipment else [],
+        'document_url': document_url if shipment else None,
+        'status_percentage': get_status_percentage(shipment.status) if shipment else 0
     }
     return render(request, 'tracking/track.html', context)
-
-def shipment_detail(request, tracking_number):
-    """Detailed view for a specific shipment"""
-    shipment = get_object_or_404(Shipment, tracking_number=tracking_number.upper())
-    tracking_updates = shipment.updates.all().order_by('-timestamp')
-    
-    context = {
-        'shipment': shipment,
-        'tracking_updates': tracking_updates,
-        'status_percentage': get_status_percentage(shipment.status),
-        'estimated_delivery_days': get_estimated_days(shipment.estimated_delivery),
-    }
-    return render(request, 'tracking/shipment_detail.html', context)
 
 @require_http_methods(["GET"])
 def api_track_shipment(request, tracking_number):
@@ -44,6 +41,13 @@ def api_track_shipment(request, tracking_number):
     try:
         shipment = Shipment.objects.get(tracking_number=tracking_number.upper())
         updates = shipment.updates.all().values('status', 'location', 'description', 'timestamp')
+        
+        # Get document URL
+        document_url = None
+        if shipment.document_cloudinary_url:
+            document_url = shipment.document_cloudinary_url
+        elif shipment.document and hasattr(shipment.document, 'url'):
+            document_url = shipment.document.url
         
         data = {
             'success': True,
@@ -60,7 +64,9 @@ def api_track_shipment(request, tracking_number):
             'estimated_delivery': shipment.estimated_delivery.strftime('%Y-%m-%d'),
             'current_location': shipment.current_location or 'In transit',
             'updates': list(updates),
-            'status_percentage': get_status_percentage(shipment.status)
+            'status_percentage': get_status_percentage(shipment.status),
+            'document_url': document_url,
+            'has_document': bool(document_url)
         }
         return JsonResponse(data)
     except Shipment.DoesNotExist:

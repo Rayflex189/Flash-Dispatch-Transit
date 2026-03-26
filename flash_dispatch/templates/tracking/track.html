@@ -64,6 +64,23 @@
             opacity: 0.5;
         }
     }
+    
+    /* Document/Image Gallery Styles */
+    .document-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .document-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .document-modal {
+        transition: opacity 0.3s ease;
+    }
+    .modal-image {
+        max-height: 80vh;
+        max-width: 90vw;
+        object-fit: contain;
+    }
 </style>
 {% endblock %}
 
@@ -204,6 +221,65 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Document/Image Section -->
+                {% if document_url %}
+                <div class="p-6 border-b bg-gray-50">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-file-image text-blue-600 mr-2"></i>
+                        Parcel Image / Document
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="document-card bg-white rounded-lg overflow-hidden shadow-md cursor-pointer" onclick="openDocumentModal('{{ document_url }}', '{{ shipment.tracking_number }}')">
+                            <div class="relative">
+                                <img src="{{ document_url }}" 
+                                     alt="Parcel Document" 
+                                     class="w-full h-48 object-cover hover:opacity-90 transition">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition flex items-center justify-center">
+                                    <i class="fas fa-search-plus text-white text-2xl opacity-0 hover:opacity-100 transition"></i>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <p class="text-sm font-medium text-gray-700">Click to view full image</p>
+                                <p class="text-xs text-gray-500 mt-1">Document attached to shipment</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center space-y-2">
+                            <p class="text-sm text-gray-600">
+                                <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                                This document/image is attached to your shipment for reference.
+                            </p>
+                            <a href="{{ document_url }}" 
+                               target="_blank" 
+                               class="inline-flex items-center text-blue-600 hover:text-blue-700 text-sm">
+                                <i class="fas fa-external-link-alt mr-1"></i>
+                                Open in new tab
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Additional Options Badges -->
+                <div class="px-6 py-4 border-b">
+                    <div class="flex flex-wrap gap-2">
+                        {% if shipment.insurance %}
+                        <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                            <i class="fas fa-shield-alt mr-1"></i>Insured
+                        </span>
+                        {% endif %}
+                        {% if shipment.signature_required %}
+                        <span class="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                            <i class="fas fa-signature mr-1"></i>Signature Required
+                        </span>
+                        {% endif %}
+                        {% if shipment.fragile_handling %}
+                        <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs">
+                            <i class="fas fa-box-open mr-1"></i>Fragile
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
 
             <!-- Tracking Timeline -->
@@ -261,6 +337,32 @@
             </div>
         </div>
         {% endif %}
+    </div>
+</div>
+
+<!-- Document/Image Modal -->
+<div id="documentModal" class="fixed inset-0 bg-black bg-opacity-90 hidden items-center justify-center z-50 document-modal">
+    <div class="relative max-w-6xl w-full mx-4">
+        <button onclick="closeDocumentModal()" 
+                class="absolute -top-10 right-0 text-white hover:text-gray-300 text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="bg-white rounded-lg overflow-hidden">
+            <div class="p-4 bg-gray-100 border-b">
+                <h3 class="text-lg font-semibold" id="modalTitle">Shipment Document</h3>
+            </div>
+            <div class="p-4 flex justify-center items-center" style="min-height: 60vh;">
+                <img id="modalImage" src="" alt="Document" class="modal-image rounded-lg">
+            </div>
+            <div class="p-4 bg-gray-100 border-t flex justify-between">
+                <a href="#" id="downloadLink" target="_blank" class="text-blue-600 hover:text-blue-700">
+                    <i class="fas fa-download mr-1"></i>Download
+                </a>
+                <button onclick="closeDocumentModal()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                    Close
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -322,6 +424,37 @@
 </div>
 
 <script>
+// Document/Image Modal functions
+function openDocumentModal(imageUrl, trackingNumber) {
+    const modal = document.getElementById('documentModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const downloadLink = document.getElementById('downloadLink');
+    
+    modalImage.src = imageUrl;
+    modalTitle.textContent = `Shipment Document - ${trackingNumber}`;
+    downloadLink.href = imageUrl;
+    
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDocumentModal() {
+    const modal = document.getElementById('documentModal');
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeDocumentModal();
+        closeShareModal();
+    }
+});
+
 // Tracking page specific functions
 function getNotifications() {
     if ('Notification' in window) {
@@ -370,10 +503,13 @@ function showNotification(message, type) {
         error: 'bg-red-500',
         info: 'bg-blue-500'
     };
-    notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+    notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in`;
     notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>${message}`;
     document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 3000);
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 // Close modal when clicking outside
@@ -383,6 +519,14 @@ document.addEventListener('click', function(event) {
         const modalContent = modal.querySelector('.bg-white');
         if (modalContent && !modalContent.contains(event.target) && !event.target.closest('button')) {
             closeShareModal();
+        }
+    }
+    
+    const docModal = document.getElementById('documentModal');
+    if (docModal && !docModal.classList.contains('hidden')) {
+        const modalContent = docModal.querySelector('.bg-white');
+        if (modalContent && !modalContent.contains(event.target) && !event.target.closest('button')) {
+            closeDocumentModal();
         }
     }
 });

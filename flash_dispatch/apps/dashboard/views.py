@@ -3,12 +3,15 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils import timezone
 from django.db import transaction
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from django.views.decorators.http import require_http_methods
+from django.core.exceptions import PermissionDenied
 from apps.tracking.models import Shipment, TrackingUpdate
 from apps.accounts.models import User
-from django.core.exceptions import PermissionDenied
 import random
 import string
-from datetime import datetime
+from datetime import datetime, timedelta
+import cloudinary.uploader
 
 def generate_tracking_number():
     """Generate a unique tracking number"""
@@ -57,6 +60,8 @@ def home(request):
 
 @login_required
 @user_passes_test(is_admin_or_staff, login_url='dashboard:home')
+@csrf_protect
+@ensure_csrf_cookie
 def create_shipment(request):
     """Create a new shipment - Staff only"""
     if request.method == 'POST':
@@ -87,6 +92,9 @@ def create_shipment(request):
                 signature = request.POST.get('signature') == 'on'
                 fragile = request.POST.get('fragile') == 'on'
                 
+                # Document upload
+                document = request.FILES.get('document')
+                
                 # Validate required fields
                 if not all([sender_name, sender_address, sender_phone, sender_email,
                            recipient_name, recipient_address, recipient_phone, recipient_email]):
@@ -94,7 +102,6 @@ def create_shipment(request):
                     return render(request, 'dashboard/create_shipment.html')
                 
                 # Calculate estimated delivery date
-                from datetime import datetime, timedelta
                 if service_type == 'overnight':
                     estimated_delivery = datetime.now().date() + timedelta(days=1)
                 elif service_type == 'express':
@@ -122,7 +129,11 @@ def create_shipment(request):
                     service_type=service_type,
                     status='pending',
                     estimated_delivery=estimated_delivery,
-                    current_location='Processing Center'
+                    current_location='Processing Center',
+                    insurance=insurance,
+                    signature_required=signature,
+                    fragile_handling=fragile,
+                    document=document
                 )
                 
                 # Create initial tracking update
@@ -201,6 +212,7 @@ def shipment_list(request):
 
 @login_required
 @user_passes_test(is_admin_or_staff)
+@csrf_protect
 def update_shipment_status(request, tracking_number):
     """Update shipment status - Staff only"""
     if request.method == 'POST':

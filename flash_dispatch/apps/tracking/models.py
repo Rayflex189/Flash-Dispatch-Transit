@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 import random
 import string
+import cloudinary
+import cloudinary.uploader
 
 User = get_user_model()
 
@@ -50,6 +52,15 @@ class Shipment(models.Model):
     description = models.TextField()
     service_type = models.CharField(max_length=20, choices=SERVICE_TYPES)
     
+    # Document/Image Uploads (using Cloudinary)
+    document = models.ImageField(
+        upload_to='shipment_documents/',
+        null=True,
+        blank=True,
+        help_text="Upload document or package image"
+    )
+    document_cloudinary_url = models.URLField(max_length=500, blank=True, null=True)
+    
     # Status
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -60,8 +71,28 @@ class Shipment(models.Model):
     # Tracking
     current_location = models.CharField(max_length=255, blank=True)
     
+    # Additional options
+    insurance = models.BooleanField(default=False)
+    signature_required = models.BooleanField(default=False)
+    fragile_handling = models.BooleanField(default=False)
+    
     def __str__(self):
         return f"{self.tracking_number} - {self.recipient_name}"
+    
+    def save(self, *args, **kwargs):
+        # Upload to Cloudinary if document is present
+        if self.document and hasattr(self.document, 'file'):
+            try:
+                upload_result = cloudinary.uploader.upload(
+                    self.document.file,
+                    folder=f"shipments/{self.tracking_number}",
+                    resource_type="auto"
+                )
+                self.document_cloudinary_url = upload_result['secure_url']
+            except Exception as e:
+                print(f"Cloudinary upload error: {e}")
+        
+        super().save(*args, **kwargs)
 
 class TrackingUpdate(models.Model):
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, related_name='updates')
