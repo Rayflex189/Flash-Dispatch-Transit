@@ -19,8 +19,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://flashdispatchtransit.fly.dev',
     'http://flashdispatchtransit.fly.dev',
     'https://*.fly.dev',
-    'http://localhost:8000',
-    'https://localhost:8000',
+    'http://localhost:8020',
+    'https://localhost:8020',
 ]
 
 # Application definition
