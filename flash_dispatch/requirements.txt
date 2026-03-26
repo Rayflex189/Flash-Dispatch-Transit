@@ -1,37 +1,12 @@
-# Core Django and Web Framework
 Django==4.2.0
 django-crispy-forms==2.0
-crispy-tailwind==0.2.0
+crispy-tailwind==0.1.0  # Changed to compatible version
 whitenoise==6.5.0
 gunicorn==21.2.0
 daphne==4.0.0
-
-# Database
 dj-database-url==2.0.0
 psycopg2-binary==2.9.9
-
-# Cloud Storage and Media
 cloudinary==1.36.0
 django-cloudinary-storage==0.3.0
 pillow==10.0.0
-
-# Environment Variables and Configuration
 python-decouple==3.8
-
-# Email (optional, for production)
-# django-anymail==10.0  # Uncomment if using advanced email services
-
-# Development Tools (optional, uncomment if needed)
-# django-debug-toolbar==4.2.0
-# ipython==8.17.0
-# pytest-django==4.5.0
-# factory-boy==3.3.0
-# coverage==7.3.0
-
-# Security (optional)
-# django-csp==3.7
-# django-axes==6.0
-
-# API Development (optional)
-# djangorestframework==3.14.0
-# django-cors-headers==4.3.0
