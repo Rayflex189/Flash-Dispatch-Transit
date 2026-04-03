@@ -12,17 +12,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY', config('SECRET_KEY', default='django-i
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Allowed hosts for Fly.io
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'flashdispatchtransit.fly.dev,localhost,127.0.0.1').split(',')
-
-# CSRF Trusted Origins for Fly.io
-CSRF_TRUSTED_ORIGINS = [
-    'https://flashdispatchtransit.fly.dev',
-    'http://flashdispatchtransit.fly.dev',
-    'https://*.fly.dev',
-    'http://localhost:8020',
-    'https://localhost:8020',
+ALLOWED_HOSTS = [
+    'flashdispatchtransit.online',
+    'www.flashdispatchtransit.online',
+    'skybridge-finance.fly.dev',
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://flashdispatchtransit.online',
+                        'https://www.flashdispatchtransit.online',
+                        'https://www.flashdispatchtransit.online'
+                        ]
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
