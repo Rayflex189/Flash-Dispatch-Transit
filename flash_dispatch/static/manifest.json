@@ -14,49 +14,49 @@
     {
       "src": "/static/images/blue-72x72.png",
       "sizes": "72x72",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/static/images/blue-96x96.png",
       "sizes": "96x96",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/static/images/blue-128x128.png",
       "sizes": "128x128",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/static/images/blue-144x144.png",
       "sizes": "144x144",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/static/images/blue-152x152.png",
       "sizes": "152x152",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/static/images/blue-192x192.png",
       "sizes": "192x192",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
       "src": "/static/images/blue-384x384.png",
       "sizes": "384x384",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/static/images/blue-512x512.png",
       "sizes": "512x512",
-      "type": "images/png",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
@@ -64,7 +64,7 @@
     {
       "src": "/static/images/blue-screenshot.png",
       "sizes": "1170x2532",
-      "type": "images/png",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Flash Dispatch Transit Dashboard"
     }
