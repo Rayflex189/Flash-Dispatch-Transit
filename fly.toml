@@ -2,38 +2,43 @@ app = "flashdispatchtransit"
 primary_region = "iad"
 
 [build]
-  dockerfile = "Dockerfile"
-
-[env]
-  DEBUG = "False"
-  DJANGO_SETTINGS_MODULE = "flash_dispatch.settings"
-  PYTHONPATH = "/code"
+dockerfile = "Dockerfile"
 
 [deploy]
-  release_command = "python manage.py migrate --noinput"
+release_command = "python manage.py migrate --noinput"
+
+[env]
+DEBUG = "False"
+DJANGO_SETTINGS_MODULE = "flash_dispatch.settings"
+PYTHONPATH = "/code"
 
 [experimental]
-  auto_rollback = true
+auto_rollback = true
+
+  [experimental.attached]
+  secrets = { }
 
 [[services]]
-  http_checks = []
-  internal_port = 8020
-  protocol = "tcp"
+internal_port = 8_020
+protocol = "tcp"
 
   [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+  hard_limit = 25
+  soft_limit = 20
+  type = "connections"
 
   [[services.ports]]
-    handlers = ["http"]
-    port = 80
+  handlers = [ "http" ]
+  port = 80
 
   [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
+  handlers = [ "tls", "http" ]
+  port = 443
 
   [[services.tcp_checks]]
+  grace_period = "30s"
+  interval = "15s"
+  timeout = "5s"
     grace_period = "30s"
     interval = "15s"
     restart_limit = 0
