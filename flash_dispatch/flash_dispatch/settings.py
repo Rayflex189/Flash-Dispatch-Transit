@@ -15,7 +15,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     'flashdispatchtransit.online',
     'www.flashdispatchtransit.online',
-    'flashdispatchtransit.fly.dev',
+    'flash-dispatch-transit.fly.dev',
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://flashdispatchtransit.online',
