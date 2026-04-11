@@ -75,16 +75,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'flash_dispatch.wsgi.application'
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'la9kHUBMebKul5WA',
-        'HOST': 'db.orokimgqkrwhhykregfu.supabase.co',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
-} 
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
