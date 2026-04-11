@@ -75,23 +75,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'flash_dispatch.wsgi.application'
 
-# Database Configuration
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True
-        )
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'la9kHUBMebKul5WA',
+        'HOST': 'db.orokimgqkrwhhykregfu.supabase.co',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+} 
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
