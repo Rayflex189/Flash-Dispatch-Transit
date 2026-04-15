@@ -9,13 +9,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', config('SECRET_KEY', default='django-insecure-dev-key-change-in-production'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
 
 # Allowed hosts for Fly.io
 ALLOWED_HOSTS = [
     'flashdispatchtransit.online',
     'www.flashdispatchtransit.online',
-    'flashdispatchtransit.fly.dev',
+    'flash-dispatch-transit.fly.dev',
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://flashdispatchtransit.online',
@@ -75,23 +75,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'flash_dispatch.wsgi.application'
 
-# Database Configuration
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True
-        )
+
+
+# Database Configuration - Raw connection to Supabase
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.pkjehiaocsiobrlirxfs',
+        'PASSWORD': 'vbOr2fSTI0jP4STv',  # Replace with your actual password
+        'HOST': 'aws-0-eu-west-1.pooler.supabase.com',
+        'PORT': '6543',
+        'OPTIONS': {
+            # Disable server-side cursors to avoid PREPARE statement issues
+            'options': '-c default_transaction_read_only=off',
+            'client_encoding': 'UTF8',
+        },
+        'CONN_MAX_AGE': 600,  # Optional: connection persistence in seconds
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
