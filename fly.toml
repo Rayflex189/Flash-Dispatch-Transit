@@ -1,10 +1,5 @@
-# fly.toml app configuration file generated for flash-dispatch-transit on 2026-04-11T00:30:05Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
-app = 'flash-dispatch-transit'
-primary_region = 'iad'
+app = "flashdispatchtransit"
+primary_region = "iad"
 
 [build]
 dockerfile = "Dockerfile"
@@ -44,7 +39,4 @@ protocol = "tcp"
   grace_period = "30s"
   interval = "15s"
   timeout = "5s"
-    grace_period = "30s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "5s"
+  restart_limit = 0
