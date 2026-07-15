@@ -58,21 +58,28 @@ def home(request):
     }
     return render(request, 'dashboard/home.html', context)
 
+def safe_float(val, default=0.0):
+    if not val:
+        return default
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return default
+
 @login_required
-@user_passes_test(is_admin_or_staff, login_url='dashboard:home')
 @csrf_protect
 @ensure_csrf_cookie
 def create_shipment(request):
-    """Create a new shipment - Staff only"""
+    """Create a new shipment/consignment"""
     if request.method == 'POST':
         try:
             with transaction.atomic():
                 # Get form data
                 package_type = request.POST.get('package_type')
-                weight = float(request.POST.get('weight', 0))
-                length = float(request.POST.get('length', 0))
-                width = float(request.POST.get('width', 0))
-                height = float(request.POST.get('height', 0))
+                weight = safe_float(request.POST.get('weight', 0))
+                length = safe_float(request.POST.get('length', 0))
+                width = safe_float(request.POST.get('width', 0))
+                height = safe_float(request.POST.get('height', 0))
                 service_type = request.POST.get('service_type')
                 
                 # Sender information

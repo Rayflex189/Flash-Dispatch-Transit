@@ -16,6 +16,8 @@ ALLOWED_HOSTS = [
     'flashdispatchtransit.online',
     'www.flashdispatchtransit.online',
     'flash-dispatch-transit.fly.dev',
+    '127.0.0.1',
+    'localhost',
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://flashdispatchtransit.online',
@@ -77,23 +79,34 @@ WSGI_APPLICATION = 'flash_dispatch.wsgi.application'
 
 
 
-# Database Configuration - Raw connection to Supabase
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.pkjehiaocsiobrlirxfs',
-        'PASSWORD': 'vbOr2fSTI0jP4STv',  # Replace with your actual password
-        'HOST': 'aws-0-eu-west-1.pooler.supabase.com',
-        'PORT': '6543',
-        'OPTIONS': {
-            # Disable server-side cursors to avoid PREPARE statement issues
+# Database Configuration - Parse DATABASE_URL if available, otherwise fallback to SQLite
+DATABASE_URL = os.environ.get('DATABASE_URL', config('DATABASE_URL', default=''))
+
+# Force local sqlite database for local development if PostgreSQL fails, DATABASE_URL is not set, or points to the invalid Supabase pooler
+if DATABASE_URL and DATABASE_URL.startswith('postgresql') and 'aws-0-eu-west-1.pooler.supabase.com' not in DATABASE_URL:
+    try:
+        DATABASES = {
+            'default': dj_database_url.parse(DATABASE_URL)
+        }
+        DATABASES['default']['OPTIONS'] = {
             'options': '-c default_transaction_read_only=off',
             'client_encoding': 'UTF8',
-        },
-        'CONN_MAX_AGE': 600,  # Optional: connection persistence in seconds
+        }
+        DATABASES['default']['CONN_MAX_AGE'] = 600
+    except Exception:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -123,15 +136,25 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files - Using Cloudinary
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Cloudinary Configuration & Media settings
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', config('CLOUDINARY_CLOUD_NAME', default=''))
+CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', config('CLOUDINARY_API_KEY', default=''))
+CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', config('CLOUDINARY_API_SECRET', default=''))
 
-# Cloudinary Configuration
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'dlzn0moho'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '563396395915366'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', 'pCSSrLNvxfFSEzY4ZnaOiF5u93o'),
-}
+# Use Cloudinary only if credentials are set and not in offline/local-only mode
+if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET and config('USE_CLOUDINARY', default='False') == 'True':
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
+        'API_KEY': CLOUDINARY_API_KEY,
+        'API_SECRET': CLOUDINARY_API_SECRET,
+    }
+else:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

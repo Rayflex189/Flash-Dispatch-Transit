@@ -2,6 +2,17 @@
 
 {% block title %}Shipment Details - {{ shipment.tracking_number }}{% endblock %}
 
+{% block extra_css %}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+    .custom-div-icon {
+        background: none;
+        border: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="bg-gray-100 min-h-screen py-8">
     <div class="container mx-auto px-4 max-w-5xl">
@@ -65,6 +76,15 @@
                          style="width: {{ status_percentage }}%"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Real-time Google Map Tracking -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-800">
+                <i class="fas fa-map-marked-alt text-blue-600 mr-2"></i>
+                Real-time Tracking Map (Google Map View)
+            </h2>
+            <div id="map" class="w-full h-96 rounded-lg border border-gray-200 shadow-inner z-10"></div>
         </div>
 
         <!-- Main Content Grid -->
@@ -179,6 +199,41 @@
                     {% endif %}
                 </div>
 
+                {% if user.is_staff %}
+                <!-- Update Status Form (Staff Only) -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-blue-100">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center text-blue-800">
+                        <i class="fas fa-edit mr-2 text-blue-600"></i>
+                        Update Shipment Status
+                    </h2>
+                    <form method="post" action="{% url 'dashboard:update_status' shipment.tracking_number %}" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 text-sm">
+                                <option value="pending" {% if shipment.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="picked_up" {% if shipment.status == 'picked_up' %}selected{% endif %}>Picked Up</option>
+                                <option value="in_transit" {% if shipment.status == 'in_transit' %}selected{% endif %}>In Transit</option>
+                                <option value="out_for_delivery" {% if shipment.status == 'out_for_delivery' %}selected{% endif %}>Out for Delivery</option>
+                                <option value="delivered" {% if shipment.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                                <option value="cancelled" {% if shipment.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Location</label>
+                            <input type="text" name="location" value="{{ shipment.current_location }}" placeholder="e.g. Processing Hub, NY" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Description / Notes</label>
+                            <textarea name="description" rows="2" placeholder="Describe the current status or transit details..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 text-sm"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-semibold text-sm">
+                            Update Status
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+
                 <!-- Actions -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <h2 class="text-lg font-semibold mb-4">Actions</h2>
@@ -258,10 +313,6 @@ function copyShareLink() {
     showNotification('Share link copied!', 'success');
 }
 
-function trackOnMap() {
-    showNotification('Map tracking feature coming soon!', 'info');
-}
-
 function downloadLabel() {
     showNotification('Downloading shipping label...', 'info');
 }
@@ -290,5 +341,123 @@ let refreshInterval = setInterval(function() {
         })
         .catch(error => console.log('Auto-refresh error:', error));
 }, 30000);
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function geocodeAddress(address) {
+        address = address.toLowerCase();
+        if (address.includes('new york') || address.includes('ny')) {
+            return [40.7128, -74.0060];
+        } else if (address.includes('los angeles') || address.includes('la') || address.includes('ca')) {
+            return [34.0522, -118.2437];
+        } else if (address.includes('chicago') || address.includes('il')) {
+            return [41.8781, -87.6298];
+        } else if (address.includes('houston') || address.includes('tx') || address.includes('texas')) {
+            return [29.7604, -95.3698];
+        } else if (address.includes('philadelphia') || address.includes('pa')) {
+            return [39.9526, -75.1652];
+        } else if (address.includes('newark') || address.includes('nj')) {
+            return [40.7357, -74.1724];
+        } else if (address.includes('london') || address.includes('uk')) {
+            return [51.5074, -0.1278];
+        } else if (address.includes('hub') || address.includes('processing')) {
+            return [40.7357, -74.1724]; // Newark Hub
+        }
+        // Default fallback - somewhere in between or center of US
+        return [39.8283, -98.5795];
+    }
+
+    var senderCoord = geocodeAddress("{{ shipment.sender_address|escapejs }}");
+    var recipientCoord = geocodeAddress("{{ shipment.recipient_address|escapejs }}");
+    var currentStatus = "{{ shipment.status }}";
+    var currentLocationStr = "{{ shipment.current_location|escapejs }}";
+
+    var currentCoord;
+    if (currentStatus === 'pending') {
+        currentCoord = senderCoord;
+    } else if (currentStatus === 'delivered') {
+        currentCoord = recipientCoord;
+    } else {
+        currentCoord = geocodeAddress(currentLocationStr);
+        // If it falls back to the center of US, let's interpolate between sender and recipient
+        if (currentLocationStr === '' || currentCoord[0] === 39.8283) {
+            let pct = 0.5;
+            if (currentStatus === 'picked_up') pct = 0.25;
+            else if (currentStatus === 'in_transit') pct = 0.6;
+            else if (currentStatus === 'out_for_delivery') pct = 0.85;
+            
+            currentCoord = [
+                senderCoord[0] + (recipientCoord[0] - senderCoord[0]) * pct,
+                senderCoord[1] + (recipientCoord[1] - senderCoord[1]) * pct
+            ];
+        }
+    }
+
+    // Initialize the map
+    var map = L.map('map').setView(currentCoord, 4);
+
+    // Load Google Maps Tile Layer
+    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        attribution: 'Map data © Google'
+    }).addTo(map);
+
+    // Define custom HTML icons for markers
+    var senderIcon = L.divIcon({
+        html: '<div class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 border-2 border-blue-600 shadow-md"><i class="fas fa-arrow-up text-blue-600"></i></div>',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        className: 'custom-div-icon'
+    });
+
+    var recipientIcon = L.divIcon({
+        html: '<div class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 border-2 border-green-600 shadow-md"><i class="fas fa-flag-checkered text-green-600"></i></div>',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        className: 'custom-div-icon'
+    });
+
+    var packageIcon = L.divIcon({
+        html: '<div class="relative flex items-center justify-center w-10 h-10 rounded-full bg-orange-100 border-2 border-orange-600 shadow-lg"><i class="fas fa-box text-orange-600 text-lg animate-bounce"></i><span class="absolute -top-1 -right-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span></span></div>',
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+        className: 'custom-div-icon'
+    });
+
+    // Add markers
+    L.marker(senderCoord, {icon: senderIcon}).addTo(map).bindPopup("<b>Sender:</b> {{ shipment.sender_name|escapejs }}<br>{{ shipment.sender_address|escapejs }}");
+    L.marker(recipientCoord, {icon: recipientIcon}).addTo(map).bindPopup("<b>Recipient:</b> {{ shipment.recipient_name|escapejs }}<br>{{ shipment.recipient_address|escapejs }}");
+    
+    var packageMarker = L.marker(currentCoord, {icon: packageIcon}).addTo(map)
+        .bindPopup("<b>Current Location:</b> " + (currentLocationStr || "Processing Center") + "<br>Status: {{ shipment.get_status_display }}")
+        .openPopup();
+
+    // Draw route line
+    var route = L.polyline([senderCoord, recipientCoord], {
+        color: '#2563eb',
+        weight: 3,
+        dashArray: '5, 10',
+        opacity: 0.8
+    }).addTo(map);
+
+    // Fit map to show both endpoints
+    var group = new L.featureGroup([
+        L.marker(senderCoord),
+        L.marker(recipientCoord)
+    ]);
+    map.fitBounds(group.getBounds().pad(0.15));
+
+    // Handle "Track on Map" button click to focus map
+    window.trackOnMap = function() {
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+        packageMarker.openPopup();
+        showNotification('Focusing tracking map...', 'success');
+    };
+});
 </script>
 {% endblock %}

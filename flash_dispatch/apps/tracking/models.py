@@ -80,8 +80,9 @@ class Shipment(models.Model):
         return f"{self.tracking_number} - {self.recipient_name}"
     
     def save(self, *args, **kwargs):
-        # Upload to Cloudinary if document is present
-        if self.document and hasattr(self.document, 'file'):
+        # Upload to Cloudinary if document is present and Cloudinary is configured
+        from django.conf import settings
+        if self.document and hasattr(self.document, 'file') and hasattr(settings, 'CLOUDINARY_STORAGE') and settings.CLOUDINARY_STORAGE:
             try:
                 upload_result = cloudinary.uploader.upload(
                     self.document.file,
