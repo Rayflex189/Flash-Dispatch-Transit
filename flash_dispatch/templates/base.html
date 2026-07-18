@@ -74,6 +74,103 @@ s0.parentNode.insertBefore(s1,s0);
         .mobile-menu-transition {
             transition: all 0.3s ease;
         }
+
+        /* ---- Google Translate Feature Updates ---- */
+        /* Hide Google Translate top banner */
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+        body {
+            top: 0px !important;
+            position: relative !important;
+        }
+
+        /* Style the Google Translate widget */
+        .goog-te-gadget {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0 !important;
+            color: transparent !important;
+        }
+        .goog-te-gadget .goog-te-combo {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #1f2937;
+            outline: none;
+            cursor: pointer;
+            min-width: 140px;
+            transition: border-color 0.2s;
+        }
+        .goog-te-gadget .goog-te-combo:hover {
+            border-color: #2563eb;
+        }
+        .goog-te-gadget .goog-te-combo:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Translate icon wrapper */
+        .translate-icon-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Flow-down animation for dropdown */
+        .translate-dropdown {
+            transform-origin: top center;
+            animation: flowDown 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        @keyframes flowDown {
+            0% {
+                opacity: 0;
+                transform: scaleY(0.85) translateY(-8px);
+                pointer-events: none;
+            }
+            100% {
+                opacity: 1;
+                transform: scaleY(1) translateY(0);
+                pointer-events: auto;
+            }
+        }
+
+        /* Navbar slide-down effect */
+        .navbar-slide {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .navbar-slide.hidden-nav {
+            transform: translateY(-100%);
+            box-shadow: none;
+        }
+        .navbar-slide.visible-nav {
+            transform: translateY(0);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Language icon button */
+        .lang-icon-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            background: #f3f4f6;
+            color: #2563eb;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .lang-icon-btn:hover {
+            background: #e5e7eb;
+            transform: scale(1.05);
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -95,8 +192,8 @@ s0.parentNode.insertBefore(s1,s0);
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <!-- Navigation with slide-down and translate feature -->
+    <nav id="mainNav" class="navbar-slide visible-nav bg-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16 md:h-20">
                 <!-- Logo -->
@@ -110,7 +207,7 @@ s0.parentNode.insertBefore(s1,s0);
                     </div>
                 </div>
 
-                <!-- Desktop Menu -->
+                <!-- Desktop Menu with Google Translate -->
                 <div class="hidden lg:flex items-center space-x-8">
                     <a href="{% url 'landing:home' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
                         Home
@@ -136,10 +233,32 @@ s0.parentNode.insertBefore(s1,s0);
                         Contact
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
                     </a>
+
+                    <!-- Google Translate Icon - Desktop -->
+                    <div class="relative translate-icon-wrap">
+                        <button id="googleTranslateIconDesktop" class="lang-icon-btn" aria-label="Translate page">
+                            <i class="fas fa-language"></i>
+                        </button>
+                        <div id="translateDropdownDesktop" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+                            <div id="google_translate_element_desktop"></div>
+                            <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- User Actions -->
                 <div class="flex items-center space-x-4">
+                    <!-- Google Translate Icon - Mobile (visible only on mobile) -->
+                    <div class="relative translate-icon-wrap lg:hidden">
+                        <button id="googleTranslateIconMobile" class="lang-icon-btn" aria-label="Translate page">
+                            <i class="fas fa-language"></i>
+                        </button>
+                        <div id="translateDropdownMobile" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+                            <div id="google_translate_element_mobile"></div>
+                            <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
+                        </div>
+                    </div>
+
                     {% if user.is_authenticated %}
                         <div class="relative group">
                             <button class="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition">
@@ -177,14 +296,14 @@ s0.parentNode.insertBefore(s1,s0);
                         </a>
                     {% endif %}
                     
-                    <!-- Mobile Menu Button - NO ONCLICK ATTRIBUTE -->
+                    <!-- Mobile Menu Button -->
                     <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Mobile Menu - Initially Hidden -->
+            <!-- Mobile Menu -->
             <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 mobile-menu-transition">
                 <div class="py-4 space-y-3">
                     <a href="{% url 'landing:home' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
@@ -336,42 +455,49 @@ s0.parentNode.insertBefore(s1,s0);
         </div>
     </footer>
 
-    <!-- JavaScript - Fixed Mobile Menu -->
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            // Desktop
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                autoDisplay: false
+            }, 'google_translate_element_desktop');
+            // Mobile
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+                autoDisplay: false
+            }, 'google_translate_element_mobile');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- JavaScript -->
     <script>
         // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
-            // Get elements
+            // ---- Mobile Menu ----
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             
-            // Check if elements exist
             if (mobileMenuButton && mobileMenu) {
-                // Toggle menu function
                 function toggleMobileMenu() {
-                    if (mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.remove('hidden');
-                        console.log('Menu opened');
-                    } else {
-                        mobileMenu.classList.add('hidden');
-                        console.log('Menu closed');
-                    }
+                    mobileMenu.classList.toggle('hidden');
                 }
                 
-                // Add click event to button
                 mobileMenuButton.addEventListener('click', function(event) {
                     event.stopPropagation();
                     toggleMobileMenu();
                 });
                 
-                // Close menu when clicking on any link inside mobile menu
-                const mobileLinks = mobileMenu.querySelectorAll('a');
-                mobileLinks.forEach(link => {
+                mobileMenu.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', function() {
                         mobileMenu.classList.add('hidden');
                     });
                 });
                 
-                // Close menu when clicking outside
                 document.addEventListener('click', function(event) {
                     if (!mobileMenu.contains(event.target) && 
                         !mobileMenuButton.contains(event.target) && 
@@ -380,36 +506,78 @@ s0.parentNode.insertBefore(s1,s0);
                     }
                 });
                 
-                // Close menu when window is resized to desktop size
                 window.addEventListener('resize', function() {
                     if (window.innerWidth >= 1024 && !mobileMenu.classList.contains('hidden')) {
                         mobileMenu.classList.add('hidden');
                     }
                 });
-            } else {
-                console.error('Mobile menu elements not found!');
-                if (!mobileMenuButton) console.error('Button not found');
-                if (!mobileMenu) console.error('Menu not found');
             }
+
+            // ---- Navbar Slide Down on Scroll ----
+            const nav = document.getElementById('mainNav');
+            let lastScrollY = window.scrollY;
+
+            function handleScroll() {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                    nav.classList.remove('visible-nav');
+                    nav.classList.add('hidden-nav');
+                } else {
+                    nav.classList.remove('hidden-nav');
+                    nav.classList.add('visible-nav');
+                }
+                lastScrollY = currentScrollY;
+            }
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
+
+            // ---- Flow-down toggle for translate dropdowns ----
+            function setupTranslateToggle(iconId, dropdownId) {
+                const icon = document.getElementById(iconId);
+                const dropdown = document.getElementById(dropdownId);
+                if (!icon || !dropdown) return;
+
+                function toggleDropdown(e) {
+                    e.stopPropagation();
+                    if (dropdown.classList.contains('hidden')) {
+                        dropdown.classList.remove('hidden');
+                        dropdown.classList.remove('translate-dropdown');
+                        void dropdown.offsetWidth; // Force reflow
+                        dropdown.classList.add('translate-dropdown');
+                    } else {
+                        dropdown.classList.add('hidden');
+                    }
+                }
+
+                icon.addEventListener('click', toggleDropdown);
+
+                document.addEventListener('click', function(e) {
+                    if (!icon.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            setupTranslateToggle('googleTranslateIconDesktop', 'translateDropdownDesktop');
+            setupTranslateToggle('googleTranslateIconMobile', 'translateDropdownMobile');
         });
-    
-     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("{% static 'sw.js' %}")
-        .then(registration => {
-            console.log('✅ Service Worker Registered:', registration);
-            
-            // Check for updates
-            registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                console.log('🔄 New service worker found:', newWorker);
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("{% static 'sw.js' %}")
+            .then(registration => {
+                console.log('✅ Service Worker Registered:', registration);
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    console.log('🔄 New service worker found:', newWorker);
+                });
+            })
+            .catch(error => {
+                console.log('❌ Service Worker registration failed:', error);
             });
-        })
-        .catch(error => {
-            console.log('❌ Service Worker registration failed:', error);
-        });
-    }
+        }
     </script>
     <script src="/static/js/main.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
-</html>
+                        </html>
