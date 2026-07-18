@@ -80,16 +80,23 @@ s0.parentNode.insertBefore(s1,s0);
         .goog-te-banner-frame {
             display: none !important;
         }
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
         body {
             top: 0px !important;
             position: relative !important;
         }
 
-        /* Style the Google Translate widget - FIXED to show languages */
+        /* Style the Google Translate widget - FIXED */
         .goog-te-gadget {
             font-family: 'Inter', sans-serif !important;
             display: inline-block !important;
             width: 100% !important;
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            color: #1f2937 !important;
         }
         
         .goog-te-gadget .goog-te-combo {
@@ -107,6 +114,9 @@ s0.parentNode.insertBefore(s1,s0);
             transition: border-color 0.2s, box-shadow 0.2s !important;
             -webkit-appearance: menulist !important;
             appearance: menulist !important;
+            display: inline-block !important;
+            height: 40px !important;
+            line-height: 1.5 !important;
         }
         
         .goog-te-gadget .goog-te-combo:hover {
@@ -118,13 +128,13 @@ s0.parentNode.insertBefore(s1,s0);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
         }
         
-        /* Hide Google's default "Translate" label */
-        .goog-te-gadget span {
+        /* Remove Google's "Translate" text */
+        .goog-te-gadget > span:first-child {
             display: none !important;
         }
         
-        .goog-te-gadget .goog-te-combo {
-            display: inline-block !important;
+        .goog-te-gadget .goog-te-gadget-simple {
+            display: none !important;
         }
 
         /* Translate icon wrapper */
@@ -199,9 +209,47 @@ s0.parentNode.insertBefore(s1,s0);
             width: 100% !important;
         }
         
-        /* Override any hiding of the select element */
-        .goog-te-gadget-simple {
+        /* Make sure the select dropdown is visible */
+        #google_translate_element_desktop select,
+        #google_translate_element_mobile select {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 100% !important;
+            min-width: 160px !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            border: 1px solid #d1d5db !important;
+            background: white !important;
+            font-size: 14px !important;
+            color: #1f2937 !important;
+            height: 40px !important;
+            -webkit-appearance: menulist !important;
+            appearance: menulist !important;
+            cursor: pointer !important;
+        }
+        
+        #google_translate_element_desktop select option,
+        #google_translate_element_mobile select option {
+            padding: 4px 8px !important;
+            font-size: 14px !important;
+            color: #1f2937 !important;
+            background: white !important;
+        }
+
+        /* Prevent any hiding of the translate widget */
+        .goog-te-gadget * {
+            display: inline-block !important;
+            visibility: visible !important;
+        }
+        
+        .goog-te-gadget .goog-te-gadget-simple {
             display: none !important;
+        }
+        
+        /* Override any display:none on the select */
+        select.goog-te-combo {
+            display: inline-block !important;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -271,7 +319,7 @@ s0.parentNode.insertBefore(s1,s0);
                         <button id="googleTranslateIconDesktop" class="lang-icon-btn" aria-label="Translate page">
                             <i class="fas fa-language"></i>
                         </button>
-                        <div id="translateDropdownDesktop" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+                        <div id="translateDropdownDesktop" class="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
                             <div id="google_translate_element_desktop" class="w-full"></div>
                             <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
                         </div>
@@ -285,7 +333,7 @@ s0.parentNode.insertBefore(s1,s0);
                         <button id="googleTranslateIconMobile" class="lang-icon-btn" aria-label="Translate page">
                             <i class="fas fa-language"></i>
                         </button>
-                        <div id="translateDropdownMobile" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+                        <div id="translateDropdownMobile" class="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
                             <div id="google_translate_element_mobile" class="w-full"></div>
                             <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
                         </div>
@@ -505,6 +553,16 @@ s0.parentNode.insertBefore(s1,s0);
                 autoDisplay: false,
                 multilanguagePage: true
             }, 'google_translate_element_mobile');
+            
+            // Force the select dropdown to be visible after load
+            setTimeout(function() {
+                var selects = document.querySelectorAll('.goog-te-combo');
+                selects.forEach(function(select) {
+                    select.style.display = 'inline-block';
+                    select.style.visibility = 'visible';
+                    select.style.opacity = '1';
+                });
+            }, 500);
         }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -615,4 +673,4 @@ s0.parentNode.insertBefore(s1,s0);
     <script src="/static/js/main.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
-</html>
+                                                                                                                                           </html>
