@@ -1,415 +1,459 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash Dispatch | {% block title %}Professional Courier & Consignment Services{% endblock %}</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/69d8be269771e61c303b35e1/default';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<!-- With this: -->
-<link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/blue-32x32.png' %}">
-<link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/blue-16x16.png' %}">
-<link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-<link rel="apple-touch-icon" href="{% static 'images/blue-180x180.png' %}">
-<link rel="manifest" href="{% static 'manifest.json' %}">
-<meta name="theme-color" content="#2563eb">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS -->
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #0a2b5e 0%, #1a4b8c 100%);
-        }
-        .card-hover {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .tracking-progress {
-            height: 8px;
-            background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%);
-        }
-        .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #2563eb;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        /* Mobile menu transition */
-        .mobile-menu-transition {
-            transition: all 0.3s ease;
-        }
-    </style>
-    {% block extra_css %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flash Dispatch | Professional Courier & Consignment Services</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #0a2b5e 0%, #1a4b8c 100%); }
+    .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+    .tracking-progress { height: 8px; background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%); }
+    .loading-spinner { border: 3px solid #f3f3f3; border-top: 3px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    html { scroll-behavior: smooth; }
+    .mobile-menu-transition { transition: all 0.3s ease; }
+
+    /* ---- Google Translate widget customisation ---- */
+    .goog-te-gadget-simple {
+      background-color: #f8fafc !important;
+      border: 1px solid #e2e8f0 !important;
+      border-radius: 9999px !important;
+      padding: 4px 12px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      font-size: 14px !important;
+      font-family: 'Inter', sans-serif !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .goog-te-gadget-simple:hover {
+      background-color: #f1f5f9 !important;
+      border-color: #94a3b8 !important;
+    }
+    .goog-te-gadget-simple img {
+      display: none !important; /* hide globe icon */
+    }
+    .goog-te-gadget-simple .goog-te-menu-value {
+      color: #1e293b !important;
+      font-weight: 500 !important;
+    }
+    .goog-te-gadget-simple .goog-te-menu-value span {
+      color: #1e293b !important;
+    }
+    .goog-te-gadget-simple .goog-te-menu-value:before {
+      content: "\f0ac";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      margin-right: 8px;
+      color: #2563eb;
+      font-size: 14px;
+    }
+    /* hide google translate top frame */
+    .goog-te-banner-frame {
+      display: none !important;
+    }
+    body {
+      top: 0px !important;
+      position: relative !important;
+    }
+    .goog-te-gadget {
+      color: transparent !important;
+      font-size: 0 !important;
+    }
+    .goog-te-gadget .goog-te-gadget-simple {
+      font-size: 14px !important;
+    }
+
+    /* flow-down animation for the dropdown (slide & fade) */
+    .translate-dropdown {
+      transform-origin: top center;
+      animation: flowDown 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    @keyframes flowDown {
+      0% {
+        opacity: 0;
+        transform: scaleY(0.85) translateY(-8px);
+        pointer-events: none;
+      }
+      100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+        pointer-events: auto;
+      }
+    }
+
+    /* navbar slide-down effect */
+    .navbar-slide {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .navbar-slide.hidden-nav {
+      transform: translateY(-100%);
+      box-shadow: none;
+    }
+    .navbar-slide.visible-nav {
+      transform: translateY(0);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    /* small badge for translate icon */
+    .translate-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+  </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Top Bar -->
-    <div class="bg-gray-900 text-white text-sm py-2 hidden md:block">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <div class="flex space-x-6">
-                <span><i class="fas fa-phone-alt mr-2 text-blue-400"></i>+1 (800) 123-4567</span>
-                <span><i class="fas fa-envelope mr-2 text-blue-400"></i>support@flashdispatch.com</span>
-                <span><i class="fas fa-clock mr-2 text-blue-400"></i>24/7 Support</span>
-            </div>
-            <div class="flex space-x-4">
-                <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
+  <!-- Top Bar (hidden on mobile) -->
+  <div class="bg-gray-900 text-white text-sm py-2 hidden md:block">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <div class="flex space-x-6">
+        <span><i class="fas fa-phone-alt mr-2 text-blue-400"></i>+1 (800) 123-4567</span>
+        <span><i class="fas fa-envelope mr-2 text-blue-400"></i>support@flashdispatch.com</span>
+        <span><i class="fas fa-clock mr-2 text-blue-400"></i>24/7 Support</span>
+      </div>
+      <div class="flex space-x-4">
+        <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-instagram"></i></a>
+      </div>
     </div>
+  </div>
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center h-16 md:h-20">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="{% url 'landing:home' %}" class="text-2xl md:text-3xl font-extrabold">
-                        <span class="text-blue-600">FLASH</span>
-                        <span class="text-gray-800">DISPATCH</span>
-                    </a>
-                    <div class="hidden lg:flex ml-10 space-x-1">
-                        <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">Est. 2024</span>
-                    </div>
-                </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden lg:flex items-center space-x-8">
-                    <a href="{% url 'landing:home' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
-                        Home
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                    </a>
-                    <a href="{% url 'landing:services' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
-                        Services
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                    </a>
-                     <a href="{% url 'landing:about' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
-                        About
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                    </a>
-                    <a href="{% url 'tracking:track' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
-                        Track Consignment
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                    </a>
-                    <a href="{% url 'landing:rates' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
-                        Rates
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                    </a>
-                    <a href="{% url 'landing:contact' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
-                        Contact
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                    </a>
-                </div>
-
-                <!-- User Actions -->
-                <div class="flex items-center space-x-4">
-                    {% if user.is_authenticated %}
-                        <div class="relative group">
-                            <button class="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition">
-                                {% if user.profile_picture %}
-                                    <img src="{{ user.profile_picture.url }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                                {% else %}
-                                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                                        {{ user.username|first|upper }}
-                                    </div>
-                                {% endif %}
-                                <span class="font-medium hidden md:inline">{{ user.username }}</span>
-                                <i class="fas fa-chevron-down text-sm"></i>
-                            </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl hidden group-hover:block z-50">
-                                <a href="{% url 'dashboard:home' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                                </a>
-                                <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                    <i class="fas fa-user mr-2"></i>My Profile
-                                </a>
-                                
-                                <a href="{% url 'dashboard:shipments' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                    <i class="fas fa-box mr-2"></i>My Shipments
-                                </a>
-                                <div class="border-t my-1"></div>
-                                <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 text-red-600 hover:bg-red-50">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                </a>
-                            </div>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="text-gray-700 hover:text-blue-600 font-medium hidden md:inline">Login</a>
-                        <a href="{% url 'accounts:register' %}" class="bg-blue-600 text-white px-4 md:px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm md:text-base">
-                            Get Started
-                        </a>
-                    {% endif %}
-                    
-                    <!-- Mobile Menu Button - NO ONCLICK ATTRIBUTE -->
-                    <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Menu - Initially Hidden -->
-            <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 mobile-menu-transition">
-                <div class="py-4 space-y-3">
-                    <a href="{% url 'landing:home' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                        <i class="fas fa-home mr-3 text-blue-600"></i>Home
-                    </a>
-                    <a href="{% url 'landing:services' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                        <i class="fas fa-cogs mr-3 text-blue-600"></i>Services
-                    </a>
-                    <a href="{% url 'landing:about' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                        <i class="fas fa-cogs mr-3 text-blue-600"></i>About
-                    </a>
-                    <a href="{% url 'tracking:track' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                        <i class="fas fa-map-marker-alt mr-3 text-blue-600"></i>Track Consignment
-                    </a>
-                    <a href="{% url 'landing:rates' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                        <i class="fas fa-tag mr-3 text-blue-600"></i>Rates
-                    </a>
-                    <a href="{% url 'landing:contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                        <i class="fas fa-envelope mr-3 text-blue-600"></i>Contact
-                    </a>
-                    
-                    <div class="border-t border-gray-200 my-2"></div>
-                    
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'dashboard:home' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                            <i class="fas fa-tachometer-alt mr-3 text-blue-600"></i>Dashboard
-                        </a>
-                        <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                            <i class="fas fa-user mr-3 text-blue-600"></i>My Profile
-                        </a>
-                        <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition">
-                            <i class="fas fa-sign-out-alt mr-3"></i>Logout
-                        </a>
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition">
-                            <i class="fas fa-sign-in-alt mr-3 text-blue-600"></i>Login
-                        </a>
-                        <a href="{% url 'accounts:register' %}" class="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center hover:bg-blue-700 transition mx-4">
-                            <i class="fas fa-user-plus mr-2"></i>Get Started
-                        </a>
-                    {% endif %}
-                    
-                    <!-- Mobile Contact Info -->
-                    <div class="border-t border-gray-200 pt-4 mt-2 px-4">
-                        <div class="space-y-2 text-sm text-gray-600">
-                            <p><i class="fas fa-phone-alt text-blue-600 mr-2"></i>+1 (800) 123-4567</p>
-                            <p><i class="fas fa-envelope text-blue-600 mr-2"></i>support@flashdispatch.com</p>
-                            <p><i class="fas fa-clock text-blue-600 mr-2"></i>24/7 Support</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- Navigation (with slide-down effect) -->
+  <nav id="mainNav" class="navbar-slide visible-nav bg-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center h-16 md:h-20">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <a href="#" class="text-2xl md:text-3xl font-extrabold">
+            <span class="text-blue-600">FLASH</span>
+            <span class="text-gray-800">DISPATCH</span>
+          </a>
+          <div class="hidden lg:flex ml-10 space-x-1">
+            <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">Est. 2024</span>
+          </div>
         </div>
-    </nav>
 
-    <!-- Messages -->
-    {% if messages %}
-        <div class="container mx-auto px-4 mt-4">
-            {% for message in messages %}
-                <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-700 border-l-4 border-green-500{% elif message.tags == 'error' %}bg-red-100 text-red-700 border-l-4 border-red-500{% else %}bg-blue-100 text-blue-700 border-l-4 border-blue-500{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+        <!-- Desktop Menu + Google Translate -->
+        <div class="hidden lg:flex items-center space-x-8">
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
+            Home
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+          </a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
+            Services
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+          </a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
+            About
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+          </a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
+            Track Consignment
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+          </a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
+            Rates
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+          </a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
+            Contact
+            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+          </a>
 
-    <!-- Main Content -->
-    {% block content %}{% endblock %}
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="container mx-auto px-4 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Company Info -->
-                <div>
-                    <h3 class="text-2xl font-bold mb-4">
-                        <span class="text-blue-500">FLASH</span>
-                        <span class="text-white">DISPATCH</span>
-                    </h3>
-                    <p class="text-gray-400 mb-4">Your trusted partner in global logistics and consignment delivery. Fast, secure, and reliable.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>About Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Services</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Track Consignment</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Shipping Rates</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Contact</a></li>
-                    </ul>
-                </div>
-
-                <!-- Services -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Our Services</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Express Delivery</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Freight Shipping</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Warehousing</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Supply Chain</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>International Shipping</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact Info -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-blue-500 mt-1 mr-3"></i>
-                            <span class="text-gray-400">123 Business Ave, Suite 100, New York, NY 10001</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone text-blue-500 mr-3"></i>
-                            <span class="text-gray-400">+1 (800) 123-4567</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope text-blue-500 mr-3"></i>
-                            <span class="text-gray-400">support@flashdispatch.com</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-clock text-blue-500 mr-3"></i>
-                            <span class="text-gray-400">24/7 Customer Support</span>
-                        </li>
-                    </ul>
-                </div>
+          <!-- GOOGLE TRANSLATE ICON (desktop) - wrapped with flow-down on tap -->
+          <div class="relative translate-icon-wrap">
+            <div id="googleTranslateIconDesktop" class="cursor-pointer bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition flex items-center justify-center w-9 h-9">
+              <i class="fas fa-language text-blue-600 text-lg"></i>
             </div>
-
-            <!-- Bottom Bar -->
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2024 Flash Dispatch. All rights reserved. | <a href="#" class="hover:text-white">Privacy Policy</a> | <a href="#" class="hover:text-white">Terms of Service</a></p>
+            <!-- dropdown container (hidden by default) -->
+            <div id="translateDropdownDesktop" class="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+              <div id="google_translate_element_desktop"></div>
+              <div class="text-xs text-gray-500 mt-1 text-center">select language</div>
             </div>
+          </div>
         </div>
-    </footer>
 
-    <!-- JavaScript - Fixed Mobile Menu -->
-    <script>
-        // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get elements
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            // Check if elements exist
-            if (mobileMenuButton && mobileMenu) {
-                // Toggle menu function
-                function toggleMobileMenu() {
-                    if (mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.remove('hidden');
-                        console.log('Menu opened');
-                    } else {
-                        mobileMenu.classList.add('hidden');
-                        console.log('Menu closed');
-                    }
-                }
-                
-                // Add click event to button
-                mobileMenuButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    toggleMobileMenu();
-                });
-                
-                // Close menu when clicking on any link inside mobile menu
-                const mobileLinks = mobileMenu.querySelectorAll('a');
-                mobileLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        mobileMenu.classList.add('hidden');
-                    });
-                });
-                
-                // Close menu when clicking outside
-                document.addEventListener('click', function(event) {
-                    if (!mobileMenu.contains(event.target) && 
-                        !mobileMenuButton.contains(event.target) && 
-                        !mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-                
-                // Close menu when window is resized to desktop size
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth >= 1024 && !mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-            } else {
-                console.error('Mobile menu elements not found!');
-                if (!mobileMenuButton) console.error('Button not found');
-                if (!mobileMenu) console.error('Menu not found');
-            }
-        });
-    
-     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("{% static 'sw.js' %}")
-        .then(registration => {
-            console.log('✅ Service Worker Registered:', registration);
-            
-            // Check for updates
-            registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                console.log('🔄 New service worker found:', newWorker);
-            });
-        })
-        .catch(error => {
-            console.log('❌ Service Worker registration failed:', error);
-        });
+        <!-- User Actions + mobile button + translate icon (mobile) -->
+        <div class="flex items-center space-x-4">
+          <!-- Google Translate Icon (mobile) with flow-down -->
+          <div class="relative translate-icon-wrap lg:hidden">
+            <div id="googleTranslateIconMobile" class="cursor-pointer bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition flex items-center justify-center w-9 h-9">
+              <i class="fas fa-language text-blue-600 text-lg"></i>
+            </div>
+            <div id="translateDropdownMobile" class="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+              <div id="google_translate_element_mobile"></div>
+              <div class="text-xs text-gray-500 mt-1 text-center">select language</div>
+            </div>
+          </div>
+
+          {% if user.is_authenticated %}
+          <div class="relative group hidden md:block">
+            <button class="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition">
+              <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">U</div>
+              <span class="font-medium hidden md:inline">User</span>
+              <i class="fas fa-chevron-down text-sm"></i>
+            </button>
+            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl hidden group-hover:block z-50">
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a>
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600"><i class="fas fa-user mr-2"></i>My Profile</a>
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600"><i class="fas fa-box mr-2"></i>My Shipments</a>
+              <div class="border-t my-1"></div>
+              <a href="#" class="block px-4 py-2 text-red-600 hover:bg-red-50"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+            </div>
+          </div>
+          {% else %}
+          <a href="#" class="text-gray-700 hover:text-blue-600 font-medium hidden md:inline">Login</a>
+          <a href="#" class="bg-blue-600 text-white px-4 md:px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm md:text-base">Get Started</a>
+          {% endif %}
+
+          <!-- Mobile menu button -->
+          <button id="mobile-menu-button" class="lg:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 mobile-menu-transition">
+        <div class="py-4 space-y-3">
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-home mr-3 text-blue-600"></i>Home</a>
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-cogs mr-3 text-blue-600"></i>Services</a>
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-cogs mr-3 text-blue-600"></i>About</a>
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-map-marker-alt mr-3 text-blue-600"></i>Track Consignment</a>
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-tag mr-3 text-blue-600"></i>Rates</a>
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-envelope mr-3 text-blue-600"></i>Contact</a>
+          <div class="border-t border-gray-200 my-2"></div>
+          {% if user.is_authenticated %}
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3 text-blue-600"></i>Dashboard</a>
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-user mr-3 text-blue-600"></i>My Profile</a>
+          <a href="#" class="block px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition"><i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
+          {% else %}
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"><i class="fas fa-sign-in-alt mr-3 text-blue-600"></i>Login</a>
+          <a href="#" class="block px-4 py-2 bg-blue-600 text-white rounded-lg text-center hover:bg-blue-700 transition mx-4"><i class="fas fa-user-plus mr-2"></i>Get Started</a>
+          {% endif %}
+          <div class="border-t border-gray-200 pt-4 mt-2 px-4">
+            <div class="space-y-2 text-sm text-gray-600">
+              <p><i class="fas fa-phone-alt text-blue-600 mr-2"></i>+1 (800) 123-4567</p>
+              <p><i class="fas fa-envelope text-blue-600 mr-2"></i>support@flashdispatch.com</p>
+              <p><i class="fas fa-clock text-blue-600 mr-2"></i>24/7 Support</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content (demo placeholder) -->
+  <section class="container mx-auto px-4 py-12">
+    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+      <h1 class="text-3xl font-bold text-gray-800">Welcome to Flash Dispatch</h1>
+      <p class="text-gray-600 mt-2">Professional courier & consignment services. <br> Tap the language icon in the navbar to translate.</p>
+      <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-700 text-sm">
+        <i class="fas fa-info-circle mr-2"></i> The Google Translate widget appears with a <strong>"flow down"</strong> animation when you tap the icon. 
+        The navbar also slides down on scroll (try scrolling).
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4"><span class="text-blue-500">FLASH</span><span class="text-white">DISPATCH</span></h3>
+          <p class="text-gray-400 mb-4">Your trusted partner in global logistics and consignment delivery.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>About Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Services</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Track Consignment</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Shipping Rates</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Our Services</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Express Delivery</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Freight Shipping</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition"><i class="fas fa-chevron-right mr-2 text-xs"></i>Warehousing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+          <ul class="space-y-3">
+            <li class="flex items-start"><i class="fas fa-map-marker-alt text-blue-500 mt-1 mr-3"></i><span class="text-gray-400">123 Business Ave, NY 10001</span></li>
+            <li class="flex items-center"><i class="fas fa-phone text-blue-500 mr-3"></i><span class="text-gray-400">+1 (800) 123-4567</span></li>
+            <li class="flex items-center"><i class="fas fa-envelope text-blue-500 mr-3"></i><span class="text-gray-400">support@flashdispatch.com</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+        &copy; 2024 Flash Dispatch. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== GOOGLE TRANSLATE SCRIPT ========== -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      // Desktop
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+        autoDisplay: false
+      }, 'google_translate_element_desktop');
+      // Mobile
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+        autoDisplay: false
+      }, 'google_translate_element_mobile');
     }
-    </script>
-    <script src="/static/js/main.js"></script>
-    {% block extra_js %}{% endblock %}
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- ========== CUSTOM JS: slide-down nav + flow-down toggle ========== -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ---- 1. Navbar slide-down on scroll ----
+      const nav = document.getElementById('mainNav');
+      let lastScrollY = window.scrollY;
+
+      function handleScroll() {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+          // scrolling down → hide
+          nav.classList.remove('visible-nav');
+          nav.classList.add('hidden-nav');
+        } else {
+          // scrolling up → show
+          nav.classList.remove('hidden-nav');
+          nav.classList.add('visible-nav');
+        }
+        lastScrollY = currentScrollY;
+      }
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+
+      // ---- 2. Flow-down toggle for translate dropdown (desktop & mobile) ----
+      function setupTranslateToggle(iconId, dropdownId) {
+        const icon = document.getElementById(iconId);
+        const dropdown = document.getElementById(dropdownId);
+        if (!icon || !dropdown) return;
+
+        function toggleDropdown(e) {
+          e.stopPropagation();
+          // if hidden, show with flow-down; else hide
+          if (dropdown.classList.contains('hidden')) {
+            dropdown.classList.remove('hidden');
+            // re-trigger animation by removing and adding class
+            dropdown.classList.remove('translate-dropdown');
+            // force reflow
+            void dropdown.offsetWidth;
+            dropdown.classList.add('translate-dropdown');
+          } else {
+            dropdown.classList.add('hidden');
+          }
+        }
+
+        icon.addEventListener('click', toggleDropdown);
+
+        // close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!icon.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.add('hidden');
+          }
+        });
+
+        // close dropdown on any link click inside (optional)
+        dropdown.querySelectorAll('a, .goog-te-gadget-simple').forEach(el => {
+          el.addEventListener('click', function() {
+            // small delay to let google translate do its thing
+            setTimeout(() => { dropdown.classList.add('hidden'); }, 300);
+          });
+        });
+      }
+
+      setupTranslateToggle('googleTranslateIconDesktop', 'translateDropdownDesktop');
+      setupTranslateToggle('googleTranslateIconMobile', 'translateDropdownMobile');
+
+      // ---- 3. Mobile menu toggle (existing) ----
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function(e) {
+          e.stopPropagation();
+          mobileMenu.classList.toggle('hidden');
+        });
+        // close on link click
+        mobileMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+          });
+        });
+        document.addEventListener('click', function(e) {
+          if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+          }
+        });
+      }
+
+    })();
+  </script>
+
+  <!-- small fix: ensure translate dropdown appears above other elements -->
+  <style>
+    #translateDropdownDesktop, #translateDropdownMobile {
+      min-width: 180px;
+    }
+    .goog-te-gadget-simple {
+      background: white !important;
+      border: 1px solid #d1d5db !important;
+      padding: 4px 10px !important;
+      width: 100% !important;
+      justify-content: center !important;
+    }
+    .goog-te-gadget-simple .goog-te-menu-value {
+      color: #1e293b !important;
+    }
+    .goog-te-gadget-simple .goog-te-menu-value:before {
+      content: "\f0ac";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      margin-right: 6px;
+      color: #2563eb;
+    }
+    /* hide google translate branding */
+    .goog-te-gadget span:not(.goog-te-menu-value) {
+      display: none !important;
+    }
+    .goog-te-gadget {
+      font-size: 0 !important;
+    }
+  </style>
+
 </body>
-</html>
+              </html>
