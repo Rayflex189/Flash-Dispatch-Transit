@@ -75,87 +75,14 @@ s0.parentNode.insertBefore(s1,s0);
             transition: all 0.3s ease;
         }
 
-        /* ---- GTranslate Styles ---- */
-        /* Hide GTranslate default styles that might conflict */
-        .gtranslate_wrapper {
-            display: inline-block;
-            width: 100%;
-        }
-        
-        .gtranslate_wrapper select {
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            border: 1px solid #d1d5db !important;
-            background: white !important;
-            font-family: 'Inter', sans-serif !important;
-            font-size: 14px !important;
-            color: #1f2937 !important;
-            outline: none !important;
-            cursor: pointer !important;
-            width: 100% !important;
-            min-width: 160px !important;
-            transition: border-color 0.2s, box-shadow 0.2s !important;
-            -webkit-appearance: menulist !important;
-            appearance: menulist !important;
-            height: 40px !important;
-            line-height: 1.5 !important;
-        }
-        
-        .gtranslate_wrapper select:hover {
-            border-color: #2563eb !important;
-        }
-        
-        .gtranslate_wrapper select:focus {
-            border-color: #2563eb !important;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-        }
-        
-        /* Hide GTranslate branding if any */
-        .gtranslate_wrapper .gt_switcher {
-            font-family: 'Inter', sans-serif !important;
-        }
-        
-        /* Translate icon wrapper */
+        /* ---- Translation Widget Styles (replacing Google Translate) ---- */
         .translate-icon-wrap {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            cursor: pointer;
         }
 
-        /* Flow-down animation for dropdown */
-        .translate-dropdown {
-            transform-origin: top center;
-            animation: flowDown 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-        @keyframes flowDown {
-            0% {
-                opacity: 0;
-                transform: scaleY(0.85) translateY(-8px);
-                pointer-events: none;
-            }
-            100% {
-                opacity: 1;
-                transform: scaleY(1) translateY(0);
-                pointer-events: auto;
-            }
-        }
-
-        /* Navbar slide-down effect */
-        .navbar-slide {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .navbar-slide.hidden-nav {
-            transform: translateY(-100%);
-            box-shadow: none;
-        }
-        .navbar-slide.visible-nav {
-            transform: translateY(0);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        /* Language icon button */
         .lang-icon-btn {
             width: 38px;
             height: 38px;
@@ -175,11 +102,104 @@ s0.parentNode.insertBefore(s1,s0);
             transform: scale(1.05);
         }
 
-        /* Ensure dropdown content is visible */
-        #translateDropdownDesktop, #translateDropdownMobile {
-            min-width: 200px;
-            max-width: 280px;
+        /* flow-down animation for the dropdown */
+        .translate-dropdown {
+            transform-origin: top center;
+            animation: flowDown 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
+        @keyframes flowDown {
+            0% {
+                opacity: 0;
+                transform: scaleY(0.85) translateY(-8px);
+                pointer-events: none;
+            }
+            100% {
+                opacity: 1;
+                transform: scaleY(1) translateY(0);
+                pointer-events: auto;
+            }
+        }
+
+        /* navbar slide-down effect */
+        .navbar-slide {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .navbar-slide.hidden-nav {
+            transform: translateY(-100%);
+            box-shadow: none;
+        }
+        .navbar-slide.visible-nav {
+            transform: translateY(0);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        /* Langbly widget styles */
+        .langbly-select {
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            border: 1px solid #d1d5db !important;
+            background: white !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 14px !important;
+            color: #1f2937 !important;
+            outline: none !important;
+            cursor: pointer !important;
+            width: 100% !important;
+            min-width: 160px !important;
+            transition: border-color 0.2s, box-shadow 0.2s !important;
+            -webkit-appearance: menulist !important;
+            appearance: menulist !important;
+            height: 40px !important;
+        }
+        .langbly-select:hover {
+            border-color: #2563eb !important;
+        }
+        .langbly-select:focus {
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+        }
+
+        #translateDropdownDesktop, #translateDropdownMobile {
+            min-width: 180px;
+        }
+
+        /* Translation status toast */
+        .translate-status {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            max-width: 350px;
+            font-family: 'Inter', sans-serif;
+        }
+        .translate-status.show {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .translate-status .status-close {
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .translate-status .status-close:hover {
+            opacity: 1;
+        }
+        .translate-status.success { border-left: 4px solid #10b981; }
+        .translate-status.loading { border-left: 4px solid #f59e0b; }
+        .translate-status.error { border-left: 4px solid #ef4444; }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -201,7 +221,7 @@ s0.parentNode.insertBefore(s1,s0);
         </div>
     </div>
 
-    <!-- Navigation with slide-down and translate feature -->
+    <!-- Navigation (with slide-down effect) -->
     <nav id="mainNav" class="navbar-slide visible-nav bg-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16 md:h-20">
@@ -216,7 +236,7 @@ s0.parentNode.insertBefore(s1,s0);
                     </div>
                 </div>
 
-                <!-- Desktop Menu with GTranslate -->
+                <!-- Desktop Menu + Translate -->
                 <div class="hidden lg:flex items-center space-x-8">
                     <a href="{% url 'landing:home' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
                         Home
@@ -243,33 +263,37 @@ s0.parentNode.insertBefore(s1,s0);
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
                     </a>
 
-                    <!-- GTranslate Icon - Desktop -->
+                    <!-- Translate Icon - Desktop -->
                     <div class="relative translate-icon-wrap">
-                        <button id="gtranslateIconDesktop" class="lang-icon-btn" aria-label="Translate page">
-                            <i class="fas fa-language"></i>
+                        <button id="translateIconDesktop" class="lang-icon-btn" aria-label="Translate page">
+                            <i class="fas fa-language text-blue-600 text-lg"></i>
                         </button>
-                        <div id="translateDropdownDesktop" class="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
-                            <div id="gtranslate_desktop" class="gtranslate_wrapper"></div>
-                            <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
+                        <div id="translateDropdownDesktop" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+                            <select id="langblySelectDesktop" class="langbly-select">
+                                <option value="">🌐 Select Language</option>
+                            </select>
+                            <div class="text-xs text-gray-500 mt-1 text-center">Powered by Langbly</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- User Actions -->
+                <!-- User Actions + mobile button + translate icon (mobile) -->
                 <div class="flex items-center space-x-4">
-                    <!-- GTranslate Icon - Mobile -->
+                    <!-- Translate Icon - Mobile -->
                     <div class="relative translate-icon-wrap lg:hidden">
-                        <button id="gtranslateIconMobile" class="lang-icon-btn" aria-label="Translate page">
-                            <i class="fas fa-language"></i>
+                        <button id="translateIconMobile" class="lang-icon-btn" aria-label="Translate page">
+                            <i class="fas fa-language text-blue-600 text-lg"></i>
                         </button>
-                        <div id="translateDropdownMobile" class="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
-                            <div id="gtranslate_mobile" class="gtranslate_wrapper"></div>
-                            <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
+                        <div id="translateDropdownMobile" class="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
+                            <select id="langblySelectMobile" class="langbly-select">
+                                <option value="">🌐 Select Language</option>
+                            </select>
+                            <div class="text-xs text-gray-500 mt-1 text-center">Powered by Langbly</div>
                         </div>
                     </div>
 
                     {% if user.is_authenticated %}
-                        <div class="relative group">
+                        <div class="relative group hidden md:block">
                             <button class="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition">
                                 {% if user.profile_picture %}
                                     <img src="{{ user.profile_picture.url }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
@@ -464,398 +488,254 @@ s0.parentNode.insertBefore(s1,s0);
         </div>
     </footer>
 
-    <!-- GTranslate Script - Free and reliable translation -->
-    <script type="text/javascript">
-        // Initialize GTranslate for desktop and mobile
-        function initGTranslate() {
-            // Desktop
-            if (document.getElementById('gtranslate_desktop')) {
-                new GTranslateWidget({
-    el: 'gtranslate_desktop',
-    language: 'en',
-    languages: {
-        "af":"Afrikaans",
-        "sq":"Albanian",
-        "am":"Amharic",
-        "ar":"Arabic",
-        "hy":"Armenian",
-        "az":"Azerbaijani",
-        "eu":"Basque",
-        "be":"Belarusian",
-        "bn":"Bengali",
-        "bs":"Bosnian",
-        "bg":"Bulgarian",
-        "ca":"Catalan",
-        "ceb":"Cebuano",
-        "ny":"Chichewa",
-        "zh-CN":"Chinese (Simplified)",
-        "zh-TW":"Chinese (Traditional)",
-        "co":"Corsican",
-        "hr":"Croatian",
-        "cs":"Czech",
-        "da":"Danish",
-        "nl":"Dutch",
-        "en":"English",
-        "eo":"Esperanto",
-        "et":"Estonian",
-        "tl":"Filipino",
-        "fi":"Finnish",
-        "fr":"French",
-        "fy":"Frisian",
-        "gl":"Galician",
-        "ka":"Georgian",
-        "de":"German",
-        "el":"Greek",
-        "gu":"Gujarati",
-        "ht":"Haitian Creole",
-        "ha":"Hausa",
-        "haw":"Hawaiian",
-        "he":"Hebrew",
-        "hi":"Hindi",
-        "hmn":"Hmong",
-        "hu":"Hungarian",
-        "is":"Icelandic",
-        "ig":"Igbo",
-        "id":"Indonesian",
-        "ga":"Irish",
-        "it":"Italian",
-        "ja":"Japanese",
-        "jw":"Javanese",
-        "kn":"Kannada",
-        "kk":"Kazakh",
-        "km":"Khmer",
-        "ko":"Korean",
-        "ku":"Kurdish",
-        "ky":"Kyrgyz",
-        "lo":"Lao",
-        "la":"Latin",
-        "lv":"Latvian",
-        "lt":"Lithuanian",
-        "lb":"Luxembourgish",
-        "mk":"Macedonian",
-        "mg":"Malagasy",
-        "ms":"Malay",
-        "ml":"Malayalam",
-        "mt":"Maltese",
-        "mi":"Maori",
-        "mr":"Marathi",
-        "mn":"Mongolian",
-        "my":"Myanmar (Burmese)",
-        "ne":"Nepali",
-        "no":"Norwegian",
-        "or":"Odia",
-        "ps":"Pashto",
-        "fa":"Persian",
-        "pl":"Polish",
-        "pt":"Portuguese",
-        "pa":"Punjabi",
-        "ro":"Romanian",
-        "ru":"Russian",
-        "sm":"Samoan",
-        "gd":"Scots Gaelic",
-        "sr":"Serbian",
-        "st":"Sesotho",
-        "sn":"Shona",
-        "sd":"Sindhi",
-        "si":"Sinhala",
-        "sk":"Slovak",
-        "sl":"Slovenian",
-        "so":"Somali",
-        "es":"Spanish",
-        "su":"Sundanese",
-        "sw":"Swahili",
-        "sv":"Swedish",
-        "tg":"Tajik",
-        "ta":"Tamil",
-        "te":"Telugu",
-        "th":"Thai",
-        "tr":"Turkish",
-        "uk":"Ukrainian",
-        "ur":"Urdu",
-        "ug":"Uyghur",
-        "uz":"Uzbek",
-        "vi":"Vietnamese",
-        "cy":"Welsh",
-        "xh":"Xhosa",
-        "yi":"Yiddish",
-        "yo":"Yoruba",
-        "zu":"Zulu",
-        "ak":"Akan",
-        "as":"Assamese",
-        "ay":"Aymara",
-        "bm":"Bambara",
-        "dv":"Dhivehi",
-        "ee":"Ewe",
-        "gn":"Guarani",
-        "ilo":"Ilocano",
-        "rw":"Kinyarwanda",
-        "ln":"Lingala",
-        "lg":"Luganda",
-        "mai":"Maithili",
-        "om":"Oromo",
-        "qu":"Quechua",
-        "sa":"Sanskrit",
-        "tt":"Tatar",
-        "tk":"Turkmen",
-        "ts":"Tsonga",
-        "wo":"Wolof"
-    }
-});
-            }
-            
-            // Mobile
-            if (document.getElementById('gtranslate_mobile')) {
-                new GTranslateWidget({
-    el: 'gtranslate_desktop',
-    language: 'en',
-    languages: {
-        "af":"Afrikaans",
-        "sq":"Albanian",
-        "am":"Amharic",
-        "ar":"Arabic",
-        "hy":"Armenian",
-        "az":"Azerbaijani",
-        "eu":"Basque",
-        "be":"Belarusian",
-        "bn":"Bengali",
-        "bs":"Bosnian",
-        "bg":"Bulgarian",
-        "ca":"Catalan",
-        "ceb":"Cebuano",
-        "ny":"Chichewa",
-        "zh-CN":"Chinese (Simplified)",
-        "zh-TW":"Chinese (Traditional)",
-        "co":"Corsican",
-        "hr":"Croatian",
-        "cs":"Czech",
-        "da":"Danish",
-        "nl":"Dutch",
-        "en":"English",
-        "eo":"Esperanto",
-        "et":"Estonian",
-        "tl":"Filipino",
-        "fi":"Finnish",
-        "fr":"French",
-        "fy":"Frisian",
-        "gl":"Galician",
-        "ka":"Georgian",
-        "de":"German",
-        "el":"Greek",
-        "gu":"Gujarati",
-        "ht":"Haitian Creole",
-        "ha":"Hausa",
-        "haw":"Hawaiian",
-        "he":"Hebrew",
-        "hi":"Hindi",
-        "hmn":"Hmong",
-        "hu":"Hungarian",
-        "is":"Icelandic",
-        "ig":"Igbo",
-        "id":"Indonesian",
-        "ga":"Irish",
-        "it":"Italian",
-        "ja":"Japanese",
-        "jw":"Javanese",
-        "kn":"Kannada",
-        "kk":"Kazakh",
-        "km":"Khmer",
-        "ko":"Korean",
-        "ku":"Kurdish",
-        "ky":"Kyrgyz",
-        "lo":"Lao",
-        "la":"Latin",
-        "lv":"Latvian",
-        "lt":"Lithuanian",
-        "lb":"Luxembourgish",
-        "mk":"Macedonian",
-        "mg":"Malagasy",
-        "ms":"Malay",
-        "ml":"Malayalam",
-        "mt":"Maltese",
-        "mi":"Maori",
-        "mr":"Marathi",
-        "mn":"Mongolian",
-        "my":"Myanmar (Burmese)",
-        "ne":"Nepali",
-        "no":"Norwegian",
-        "or":"Odia",
-        "ps":"Pashto",
-        "fa":"Persian",
-        "pl":"Polish",
-        "pt":"Portuguese",
-        "pa":"Punjabi",
-        "ro":"Romanian",
-        "ru":"Russian",
-        "sm":"Samoan",
-        "gd":"Scots Gaelic",
-        "sr":"Serbian",
-        "st":"Sesotho",
-        "sn":"Shona",
-        "sd":"Sindhi",
-        "si":"Sinhala",
-        "sk":"Slovak",
-        "sl":"Slovenian",
-        "so":"Somali",
-        "es":"Spanish",
-        "su":"Sundanese",
-        "sw":"Swahili",
-        "sv":"Swedish",
-        "tg":"Tajik",
-        "ta":"Tamil",
-        "te":"Telugu",
-        "th":"Thai",
-        "tr":"Turkish",
-        "uk":"Ukrainian",
-        "ur":"Urdu",
-        "ug":"Uyghur",
-        "uz":"Uzbek",
-        "vi":"Vietnamese",
-        "cy":"Welsh",
-        "xh":"Xhosa",
-        "yi":"Yiddish",
-        "yo":"Yoruba",
-        "zu":"Zulu",
-        "ak":"Akan",
-        "as":"Assamese",
-        "ay":"Aymara",
-        "bm":"Bambara",
-        "dv":"Dhivehi",
-        "ee":"Ewe",
-        "gn":"Guarani",
-        "ilo":"Ilocano",
-        "rw":"Kinyarwanda",
-        "ln":"Lingala",
-        "lg":"Luganda",
-        "mai":"Maithili",
-        "om":"Oromo",
-        "qu":"Quechua",
-        "sa":"Sanskrit",
-        "tt":"Tatar",
-        "tk":"Turkmen",
-        "ts":"Tsonga",
-        "wo":"Wolof"
-    }
-});
-            }
-        }
+    <!-- Translation Status Toast -->
+    <div id="translateStatus" class="translate-status">
+        <span id="statusText">Translating...</span>
+        <span class="status-close" onclick="hideStatus()">✕</span>
+    </div>
 
-        // Simple GTranslate Widget Implementation
-        function GTranslateWidget(config) {
-            this.el = config.el;
-            this.currentLang = config.language || 'en';
-            this.languages = config.languages || {};
-            
-            this.render();
-            this.bindEvents();
-        }
-
-        GTranslateWidget.prototype.render = function() {
-            const container = document.getElementById(this.el);
-            if (!container) return;
-            
-            // Create select dropdown
-            const select = document.createElement('select');
-            select.className = 'gtranslate-select';
-            select.setAttribute('aria-label', 'Select language');
-            
-            // Add options
-            Object.keys(this.languages).forEach(function(code) {
-                const option = document.createElement('option');
-                option.value = code;
-                option.textContent = this.languages[code];
-                if (code === this.currentLang) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            }.bind(this));
-            
-            container.innerHTML = '';
-            container.appendChild(select);
-        };
-
-        GTranslateWidget.prototype.bindEvents = function() {
-            const container = document.getElementById(this.el);
-            if (!container) return;
-            
-            const select = container.querySelector('.gtranslate-select');
-            if (!select) return;
-            
-            select.addEventListener('change', function(e) {
-                const lang = e.target.value;
-                if (lang && lang !== this.currentLang) {
-                    this.translatePage(lang);
-                }
-            }.bind(this));
-        };
-
-        GTranslateWidget.prototype.translatePage = function(targetLang) {
-            // Use Google Translate API via iframe or fetch
-            // For free version, we'll use the translate.google.com iframe approach
-            const currentUrl = window.location.href;
-            const translatedUrl = 'https://translate.google.com/translate?sl=auto&tl=' + targetLang + '&u=' + encodeURIComponent(currentUrl);
-            
-            // Open in new tab or redirect
-            window.open(translatedUrl, '_blank');
-            
-            // Alternative: redirect current page
-            // window.location.href = translatedUrl;
-        };
-
-        // Initialize when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load GTranslate script
-            initGTranslate();
-            
-            // Also initialize after a short delay to ensure DOM is fully ready
-            setTimeout(initGTranslate, 500);
-        });
-    </script>
-
-    <!-- JavaScript -->
+    <!-- ========== LANGBLY TRANSLATION - HARDCODED API KEY ========== -->
     <script>
-        // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // ---- Mobile Menu ----
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
+    (function() {
+        "use strict";
+
+        // ===== HARDCODED LANGBLY API KEY =====
+        const LANGBLY_API_KEY = 'FXffR5ZjtrQtQjPCFTm8j8';
+        const LANGBLY_API_URL = 'https://api.langbly.com/v1/translate';
+
+        // ===== LANGUAGE DATABASE =====
+        const LANGUAGES = {
+            'en': { name: 'English', flag: '🇬🇧' },
+            'es': { name: 'Spanish', flag: '🇪🇸' },
+            'fr': { name: 'French', flag: '🇫🇷' },
+            'de': { name: 'German', flag: '🇩🇪' },
+            'it': { name: 'Italian', flag: '🇮🇹' },
+            'pt': { name: 'Portuguese', flag: '🇵🇹' },
+            'ru': { name: 'Russian', flag: '🇷🇺' },
+            'zh-CN': { name: 'Chinese (Simplified)', flag: '🇨🇳' },
+            'zh-TW': { name: 'Chinese (Traditional)', flag: '🇹🇼' },
+            'ja': { name: 'Japanese', flag: '🇯🇵' },
+            'ko': { name: 'Korean', flag: '🇰🇷' },
+            'ar': { name: 'Arabic', flag: '🇸🇦' },
+            'hi': { name: 'Hindi', flag: '🇮🇳' },
+            'bn': { name: 'Bengali', flag: '🇧🇩' },
+            'pa': { name: 'Punjabi', flag: '🇮🇳' },
+            'te': { name: 'Telugu', flag: '🇮🇳' },
+            'ta': { name: 'Tamil', flag: '🇮🇳' },
+            'ur': { name: 'Urdu', flag: '🇵🇰' },
+            'fa': { name: 'Persian', flag: '🇮🇷' },
+            'nl': { name: 'Dutch', flag: '🇳🇱' },
+            'el': { name: 'Greek', flag: '🇬🇷' },
+            'he': { name: 'Hebrew', flag: '🇮🇱' },
+            'sv': { name: 'Swedish', flag: '🇸🇪' },
+            'no': { name: 'Norwegian', flag: '🇳🇴' },
+            'da': { name: 'Danish', flag: '🇩🇰' },
+            'fi': { name: 'Finnish', flag: '🇫🇮' },
+            'pl': { name: 'Polish', flag: '🇵🇱' },
+            'cs': { name: 'Czech', flag: '🇨🇿' },
+            'hu': { name: 'Hungarian', flag: '🇭🇺' },
+            'ro': { name: 'Romanian', flag: '🇷🇴' },
+            'th': { name: 'Thai', flag: '🇹🇭' },
+            'vi': { name: 'Vietnamese', flag: '🇻🇳' },
+            'id': { name: 'Indonesian', flag: '🇮🇩' },
+            'ms': { name: 'Malay', flag: '🇲🇾' },
+            'fil': { name: 'Filipino', flag: '🇵🇭' },
+            'tr': { name: 'Turkish', flag: '🇹🇷' },
+            'uk': { name: 'Ukrainian', flag: '🇺🇦' },
+            'hr': { name: 'Croatian', flag: '🇭🇷' },
+            'sr': { name: 'Serbian', flag: '🇷🇸' },
+            'sk': { name: 'Slovak', flag: '🇸🇰' },
+            'sl': { name: 'Slovenian', flag: '🇸🇮' },
+            'et': { name: 'Estonian', flag: '🇪🇪' },
+            'lv': { name: 'Latvian', flag: '🇱🇻' },
+            'lt': { name: 'Lithuanian', flag: '🇱🇹' },
+            'bg': { name: 'Bulgarian', flag: '🇧🇬' },
+            'ca': { name: 'Catalan', flag: '🇪🇸' },
+            'gl': { name: 'Galician', flag: '🇪🇸' },
+            'eu': { name: 'Basque', flag: '🇪🇸' },
+            'sw': { name: 'Swahili', flag: '🇰🇪' },
+            'am': { name: 'Amharic', flag: '🇪🇹' },
+            'ne': { name: 'Nepali', flag: '🇳🇵' },
+            'si': { name: 'Sinhala', flag: '🇱🇰' },
+            'my': { name: 'Burmese', flag: '🇲🇲' },
+            'km': { name: 'Khmer', flag: '🇰🇭' }
+        };
+
+        // ===== STATUS FUNCTIONS =====
+        function showStatus(message, type) {
+            const status = document.getElementById('translateStatus');
+            const text = document.getElementById('statusText');
+            if (!status || !text) return;
             
-            if (mobileMenuButton && mobileMenu) {
-                function toggleMobileMenu() {
-                    mobileMenu.classList.toggle('hidden');
-                }
-                
-                mobileMenuButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    toggleMobileMenu();
+            status.className = 'translate-status show ' + (type || '');
+            text.textContent = message;
+            
+            if (type === 'success') {
+                clearTimeout(status._timeout);
+                status._timeout = setTimeout(hideStatus, 3000);
+            }
+        }
+        
+        function hideStatus() {
+            const status = document.getElementById('translateStatus');
+            if (status) {
+                status.classList.remove('show');
+                clearTimeout(status._timeout);
+            }
+        }
+
+        // ===== TRANSLATE WITH LANGBLY =====
+        function translateWithLangbly(text, targetLang, sourceLang) {
+            return new Promise(function(resolve, reject) {
+                const payload = {
+                    q: text,
+                    target: targetLang,
+                    source: sourceLang || 'auto'
+                };
+
+                fetch(LANGBLY_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + LANGBLY_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Langbly API error: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // Handle different response formats
+                    var translated = data.translatedText || 
+                                    (data.translations && data.translations[0] && data.translations[0].text) ||
+                                    data.text ||
+                                    data.result;
+                    
+                    if (translated) {
+                        resolve(translated);
+                    } else {
+                        reject(new Error('No translation in response'));
+                    }
+                })
+                .catch(function(error) {
+                    reject(error);
                 });
+            });
+        }
+
+        // ===== TRANSLATE PAGE =====
+        function translatePage(targetLang) {
+            var langInfo = LANGUAGES[targetLang];
+            var langName = langInfo ? langInfo.name : targetLang;
+            
+            showStatus('🌐 Translating to ' + langName + '...', 'loading');
+            
+            // Get page content
+            var pageContent = document.documentElement.outerHTML;
+            
+            translateWithLangbly(pageContent, targetLang, 'auto')
+                .then(function(translatedText) {
+                    document.documentElement.outerHTML = translatedText;
+                    showStatus('✅ Page translated to ' + langName, 'success');
+                    localStorage.setItem('preferred_language', targetLang);
+                })
+                .catch(function(error) {
+                    console.error('Translation error:', error);
+                    showStatus('❌ Translation failed: ' + error.message, 'error');
+                    
+                    // Fallback: Google Translate
+                    var fallbackUrl = 'https://translate.google.com/translate?sl=auto&tl=' + targetLang + '&u=' + encodeURIComponent(window.location.href);
+                    setTimeout(function() {
+                        window.open(fallbackUrl, '_blank');
+                        hideStatus();
+                    }, 1000);
+                });
+        }
+
+        // ===== POPULATE LANGUAGE SELECTS =====
+        function populateLanguageSelects() {
+            var selects = document.querySelectorAll('.langbly-select');
+            selects.forEach(function(select) {
+                // Clear existing options (keep first placeholder)
+                select.innerHTML = '<option value="">🌐 Select Language</option>';
                 
-                mobileMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', function() {
-                        mobileMenu.classList.add('hidden');
+                // Add languages grouped
+                var groups = {
+                    'Most Popular': ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'zh-CN', 'ja', 'ko', 'ar', 'hi'],
+                    'European': ['nl', 'el', 'sv', 'no', 'da', 'fi', 'pl', 'cs', 'hu', 'ro', 'hr', 'sr', 'sk', 'sl', 'et', 'lv', 'lt', 'bg', 'ca', 'gl', 'eu', 'uk'],
+                    'Asian': ['bn', 'pa', 'te', 'ta', 'ur', 'th', 'vi', 'id', 'ms', 'fil', 'ne', 'si', 'my', 'km'],
+                    'African & ME': ['sw', 'am', 'fa', 'he']
+                };
+                
+                Object.keys(groups).forEach(function(groupName) {
+                    var optGroup = document.createElement('optgroup');
+                    optGroup.label = groupName;
+                    
+                    groups[groupName].forEach(function(code) {
+                        if (LANGUAGES[code]) {
+                            var option = document.createElement('option');
+                            option.value = code;
+                            option.textContent = LANGUAGES[code].flag + ' ' + LANGUAGES[code].name;
+                            optGroup.appendChild(option);
+                        }
                     });
+                    
+                    select.appendChild(optGroup);
                 });
-                
-                document.addEventListener('click', function(event) {
-                    if (!mobileMenu.contains(event.target) && 
-                        !mobileMenuButton.contains(event.target) && 
-                        !mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-                
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth >= 1024 && !mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
+            });
+        }
+
+        // ===== SETUP DROPDOWN TOGGLES =====
+        function setupDropdownToggle(iconId, dropdownId, selectId) {
+            var icon = document.getElementById(iconId);
+            var dropdown = document.getElementById(dropdownId);
+            var select = document.getElementById(selectId);
+            
+            if (!icon || !dropdown || !select) return;
+
+            function toggleDropdown(e) {
+                e.stopPropagation();
+                if (dropdown.classList.contains('hidden')) {
+                    dropdown.classList.remove('hidden');
+                    dropdown.classList.remove('translate-dropdown');
+                    void dropdown.offsetWidth;
+                    dropdown.classList.add('translate-dropdown');
+                } else {
+                    dropdown.classList.add('hidden');
+                }
             }
 
-            // ---- Navbar Slide Down on Scroll ----
-            const nav = document.getElementById('mainNav');
-            let lastScrollY = window.scrollY;
+            icon.addEventListener('click', toggleDropdown);
+
+            select.addEventListener('change', function() {
+                var lang = this.value;
+                if (lang && LANGUAGES[lang]) {
+                    dropdown.classList.add('hidden');
+                    translatePage(lang);
+                    // Reset select
+                    this.value = '';
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!icon.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+
+        // ===== NAVBAR SLIDE-DOWN =====
+        function setupNavbarSlide() {
+            var nav = document.getElementById('mainNav');
+            if (!nav) return;
+            
+            var lastScrollY = window.scrollY;
 
             function handleScroll() {
-                const currentScrollY = window.scrollY;
+                var currentScrollY = window.scrollY;
                 if (currentScrollY > lastScrollY && currentScrollY > 80) {
                     nav.classList.remove('visible-nav');
                     nav.classList.add('hidden-nav');
@@ -867,61 +747,82 @@ s0.parentNode.insertBefore(s1,s0);
             }
 
             window.addEventListener('scroll', handleScroll, { passive: true });
+        }
 
-            // ---- Flow-down toggle for translate dropdowns ----
-            function setupTranslateToggle(iconId, dropdownId) {
-                const icon = document.getElementById(iconId);
-                const dropdown = document.getElementById(dropdownId);
-                if (!icon || !dropdown) return;
-
-                function toggleDropdown(e) {
-                    e.stopPropagation();
-                    if (dropdown.classList.contains('hidden')) {
-                        dropdown.classList.remove('hidden');
-                        dropdown.classList.remove('translate-dropdown');
-                        void dropdown.offsetWidth;
-                        dropdown.classList.add('translate-dropdown');
-                    } else {
-                        dropdown.classList.add('hidden');
-                    }
-                }
-
-                icon.addEventListener('click', toggleDropdown);
-
-                document.addEventListener('click', function(e) {
-                    if (!icon.contains(e.target) && !dropdown.contains(e.target)) {
-                        dropdown.classList.add('hidden');
-                    }
-                });
-            }
-
-            setupTranslateToggle('gtranslateIconDesktop', 'translateDropdownDesktop');
-            setupTranslateToggle('gtranslateIconMobile', 'translateDropdownMobile');
+        // ===== MOBILE MENU =====
+        function setupMobileMenu() {
+            var button = document.getElementById('mobile-menu-button');
+            var menu = document.getElementById('mobile-menu');
             
-            // Re-initialize GTranslate when dropdown opens
+            if (!button || !menu) return;
+
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menu.classList.toggle('hidden');
+            });
+
+            menu.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    menu.classList.add('hidden');
+                });
+            });
+
             document.addEventListener('click', function(e) {
-                if (e.target.closest('#gtranslateIconDesktop') || e.target.closest('#gtranslateIconMobile')) {
-                    setTimeout(initGTranslate, 100);
+                if (!menu.contains(e.target) && !button.contains(e.target) && !menu.classList.contains('hidden')) {
+                    menu.classList.add('hidden');
                 }
             });
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024 && !menu.classList.contains('hidden')) {
+                    menu.classList.add('hidden');
+                }
+            });
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            populateLanguageSelects();
+            
+            setupDropdownToggle('translateIconDesktop', 'translateDropdownDesktop', 'langblySelectDesktop');
+            setupDropdownToggle('translateIconMobile', 'translateDropdownMobile', 'langblySelectMobile');
+            
+            setupNavbarSlide();
+            setupMobileMenu();
+            
+            // Auto-translate if language stored
+            var savedLang = localStorage.getItem('preferred_language');
+            if (savedLang && LANGUAGES[savedLang]) {
+                // Optionally auto-translate
+            }
         });
 
-        // Service Worker Registration
+        // ===== SERVICE WORKER =====
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register("{% static 'sw.js' %}")
-            .then(registration => {
+            .then(function(registration) {
                 console.log('✅ Service Worker Registered:', registration);
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
+                registration.addEventListener('updatefound', function() {
+                    var newWorker = registration.installing;
                     console.log('🔄 New service worker found:', newWorker);
                 });
             })
-            .catch(error => {
+            .catch(function(error) {
                 console.log('❌ Service Worker registration failed:', error);
             });
         }
+
+        // Expose API
+        window.Translation = {
+            translate: translatePage,
+            languages: LANGUAGES,
+            showStatus: showStatus,
+            hideStatus: hideStatus
+        };
+
+    })();
     </script>
     <script src="/static/js/main.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
-</html>
+                                    </html>
