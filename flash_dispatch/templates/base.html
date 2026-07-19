@@ -75,31 +75,14 @@ s0.parentNode.insertBefore(s1,s0);
             transition: all 0.3s ease;
         }
 
-        /* ---- Google Translate Feature Styles ---- */
-        /* Hide Google Translate top banner */
-        .goog-te-banner-frame {
-            display: none !important;
-        }
-        .goog-te-banner-frame.skiptranslate {
-            display: none !important;
-        }
-        body {
-            top: 0px !important;
-            position: relative !important;
-        }
-
-        /* Style the Google Translate widget - FIXED */
-        .goog-te-gadget {
-            font-family: 'Inter', sans-serif !important;
-            display: inline-block !important;
-            width: 100% !important;
-            background: transparent !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            color: #1f2937 !important;
+        /* ---- GTranslate Styles ---- */
+        /* Hide GTranslate default styles that might conflict */
+        .gtranslate_wrapper {
+            display: inline-block;
+            width: 100%;
         }
         
-        .goog-te-gadget .goog-te-combo {
+        .gtranslate_wrapper select {
             padding: 8px 12px !important;
             border-radius: 8px !important;
             border: 1px solid #d1d5db !important;
@@ -114,29 +97,24 @@ s0.parentNode.insertBefore(s1,s0);
             transition: border-color 0.2s, box-shadow 0.2s !important;
             -webkit-appearance: menulist !important;
             appearance: menulist !important;
-            display: inline-block !important;
             height: 40px !important;
             line-height: 1.5 !important;
         }
         
-        .goog-te-gadget .goog-te-combo:hover {
+        .gtranslate_wrapper select:hover {
             border-color: #2563eb !important;
         }
         
-        .goog-te-gadget .goog-te-combo:focus {
+        .gtranslate_wrapper select:focus {
             border-color: #2563eb !important;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
         }
         
-        /* Remove Google's "Translate" text */
-        .goog-te-gadget > span:first-child {
-            display: none !important;
+        /* Hide GTranslate branding if any */
+        .gtranslate_wrapper .gt_switcher {
+            font-family: 'Inter', sans-serif !important;
         }
         
-        .goog-te-gadget .goog-te-gadget-simple {
-            display: none !important;
-        }
-
         /* Translate icon wrapper */
         .translate-icon-wrap {
             display: inline-flex;
@@ -202,55 +180,6 @@ s0.parentNode.insertBefore(s1,s0);
             min-width: 200px;
             max-width: 280px;
         }
-        
-        /* Fix for Google Translate widget visibility */
-        .skiptranslate {
-            display: inline-block !important;
-            width: 100% !important;
-        }
-        
-        /* Make sure the select dropdown is visible */
-        #google_translate_element_desktop select,
-        #google_translate_element_mobile select {
-            display: inline-block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            width: 100% !important;
-            min-width: 160px !important;
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            border: 1px solid #d1d5db !important;
-            background: white !important;
-            font-size: 14px !important;
-            color: #1f2937 !important;
-            height: 40px !important;
-            -webkit-appearance: menulist !important;
-            appearance: menulist !important;
-            cursor: pointer !important;
-        }
-        
-        #google_translate_element_desktop select option,
-        #google_translate_element_mobile select option {
-            padding: 4px 8px !important;
-            font-size: 14px !important;
-            color: #1f2937 !important;
-            background: white !important;
-        }
-
-        /* Prevent any hiding of the translate widget */
-        .goog-te-gadget * {
-            display: inline-block !important;
-            visibility: visible !important;
-        }
-        
-        .goog-te-gadget .goog-te-gadget-simple {
-            display: none !important;
-        }
-        
-        /* Override any display:none on the select */
-        select.goog-te-combo {
-            display: inline-block !important;
-        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -287,7 +216,7 @@ s0.parentNode.insertBefore(s1,s0);
                     </div>
                 </div>
 
-                <!-- Desktop Menu with Google Translate -->
+                <!-- Desktop Menu with GTranslate -->
                 <div class="hidden lg:flex items-center space-x-8">
                     <a href="{% url 'landing:home' %}" class="text-gray-700 hover:text-blue-600 font-medium transition relative group">
                         Home
@@ -314,13 +243,13 @@ s0.parentNode.insertBefore(s1,s0);
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
                     </a>
 
-                    <!-- Google Translate Icon - Desktop -->
+                    <!-- GTranslate Icon - Desktop -->
                     <div class="relative translate-icon-wrap">
-                        <button id="googleTranslateIconDesktop" class="lang-icon-btn" aria-label="Translate page">
+                        <button id="gtranslateIconDesktop" class="lang-icon-btn" aria-label="Translate page">
                             <i class="fas fa-language"></i>
                         </button>
                         <div id="translateDropdownDesktop" class="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
-                            <div id="google_translate_element_desktop" class="w-full"></div>
+                            <div id="gtranslate_desktop" class="gtranslate_wrapper"></div>
                             <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
                         </div>
                     </div>
@@ -328,13 +257,13 @@ s0.parentNode.insertBefore(s1,s0);
 
                 <!-- User Actions -->
                 <div class="flex items-center space-x-4">
-                    <!-- Google Translate Icon - Mobile -->
+                    <!-- GTranslate Icon - Mobile -->
                     <div class="relative translate-icon-wrap lg:hidden">
-                        <button id="googleTranslateIconMobile" class="lang-icon-btn" aria-label="Translate page">
+                        <button id="gtranslateIconMobile" class="lang-icon-btn" aria-label="Translate page">
                             <i class="fas fa-language"></i>
                         </button>
                         <div id="translateDropdownMobile" class="absolute right-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-lg p-3 hidden z-50 translate-dropdown">
-                            <div id="google_translate_element_mobile" class="w-full"></div>
+                            <div id="gtranslate_mobile" class="gtranslate_wrapper"></div>
                             <p class="text-xs text-gray-400 text-center mt-1">Select language</p>
                         </div>
                     </div>
@@ -535,37 +464,352 @@ s0.parentNode.insertBefore(s1,s0);
         </div>
     </footer>
 
-    <!-- Google Translate Script - FIXED to show languages -->
+    <!-- GTranslate Script - Free and reliable translation -->
     <script type="text/javascript">
-        function googleTranslateElementInit() {
+        // Initialize GTranslate for desktop and mobile
+        function initGTranslate() {
             // Desktop
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
-                autoDisplay: false,
-                multilanguagePage: true
-            }, 'google_translate_element_desktop');
+            if (document.getElementById('gtranslate_desktop')) {
+                new GTranslateWidget({
+    el: 'gtranslate_desktop',
+    language: 'en',
+    languages: {
+        "af":"Afrikaans",
+        "sq":"Albanian",
+        "am":"Amharic",
+        "ar":"Arabic",
+        "hy":"Armenian",
+        "az":"Azerbaijani",
+        "eu":"Basque",
+        "be":"Belarusian",
+        "bn":"Bengali",
+        "bs":"Bosnian",
+        "bg":"Bulgarian",
+        "ca":"Catalan",
+        "ceb":"Cebuano",
+        "ny":"Chichewa",
+        "zh-CN":"Chinese (Simplified)",
+        "zh-TW":"Chinese (Traditional)",
+        "co":"Corsican",
+        "hr":"Croatian",
+        "cs":"Czech",
+        "da":"Danish",
+        "nl":"Dutch",
+        "en":"English",
+        "eo":"Esperanto",
+        "et":"Estonian",
+        "tl":"Filipino",
+        "fi":"Finnish",
+        "fr":"French",
+        "fy":"Frisian",
+        "gl":"Galician",
+        "ka":"Georgian",
+        "de":"German",
+        "el":"Greek",
+        "gu":"Gujarati",
+        "ht":"Haitian Creole",
+        "ha":"Hausa",
+        "haw":"Hawaiian",
+        "he":"Hebrew",
+        "hi":"Hindi",
+        "hmn":"Hmong",
+        "hu":"Hungarian",
+        "is":"Icelandic",
+        "ig":"Igbo",
+        "id":"Indonesian",
+        "ga":"Irish",
+        "it":"Italian",
+        "ja":"Japanese",
+        "jw":"Javanese",
+        "kn":"Kannada",
+        "kk":"Kazakh",
+        "km":"Khmer",
+        "ko":"Korean",
+        "ku":"Kurdish",
+        "ky":"Kyrgyz",
+        "lo":"Lao",
+        "la":"Latin",
+        "lv":"Latvian",
+        "lt":"Lithuanian",
+        "lb":"Luxembourgish",
+        "mk":"Macedonian",
+        "mg":"Malagasy",
+        "ms":"Malay",
+        "ml":"Malayalam",
+        "mt":"Maltese",
+        "mi":"Maori",
+        "mr":"Marathi",
+        "mn":"Mongolian",
+        "my":"Myanmar (Burmese)",
+        "ne":"Nepali",
+        "no":"Norwegian",
+        "or":"Odia",
+        "ps":"Pashto",
+        "fa":"Persian",
+        "pl":"Polish",
+        "pt":"Portuguese",
+        "pa":"Punjabi",
+        "ro":"Romanian",
+        "ru":"Russian",
+        "sm":"Samoan",
+        "gd":"Scots Gaelic",
+        "sr":"Serbian",
+        "st":"Sesotho",
+        "sn":"Shona",
+        "sd":"Sindhi",
+        "si":"Sinhala",
+        "sk":"Slovak",
+        "sl":"Slovenian",
+        "so":"Somali",
+        "es":"Spanish",
+        "su":"Sundanese",
+        "sw":"Swahili",
+        "sv":"Swedish",
+        "tg":"Tajik",
+        "ta":"Tamil",
+        "te":"Telugu",
+        "th":"Thai",
+        "tr":"Turkish",
+        "uk":"Ukrainian",
+        "ur":"Urdu",
+        "ug":"Uyghur",
+        "uz":"Uzbek",
+        "vi":"Vietnamese",
+        "cy":"Welsh",
+        "xh":"Xhosa",
+        "yi":"Yiddish",
+        "yo":"Yoruba",
+        "zu":"Zulu",
+        "ak":"Akan",
+        "as":"Assamese",
+        "ay":"Aymara",
+        "bm":"Bambara",
+        "dv":"Dhivehi",
+        "ee":"Ewe",
+        "gn":"Guarani",
+        "ilo":"Ilocano",
+        "rw":"Kinyarwanda",
+        "ln":"Lingala",
+        "lg":"Luganda",
+        "mai":"Maithili",
+        "om":"Oromo",
+        "qu":"Quechua",
+        "sa":"Sanskrit",
+        "tt":"Tatar",
+        "tk":"Turkmen",
+        "ts":"Tsonga",
+        "wo":"Wolof"
+    }
+});
+            }
             
             // Mobile
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
-                autoDisplay: false,
-                multilanguagePage: true
-            }, 'google_translate_element_mobile');
-            
-            // Force the select dropdown to be visible after load
-            setTimeout(function() {
-                var selects = document.querySelectorAll('.goog-te-combo');
-                selects.forEach(function(select) {
-                    select.style.display = 'inline-block';
-                    select.style.visibility = 'visible';
-                    select.style.opacity = '1';
-                });
-            }, 500);
+            if (document.getElementById('gtranslate_mobile')) {
+                new GTranslateWidget({
+    el: 'gtranslate_desktop',
+    language: 'en',
+    languages: {
+        "af":"Afrikaans",
+        "sq":"Albanian",
+        "am":"Amharic",
+        "ar":"Arabic",
+        "hy":"Armenian",
+        "az":"Azerbaijani",
+        "eu":"Basque",
+        "be":"Belarusian",
+        "bn":"Bengali",
+        "bs":"Bosnian",
+        "bg":"Bulgarian",
+        "ca":"Catalan",
+        "ceb":"Cebuano",
+        "ny":"Chichewa",
+        "zh-CN":"Chinese (Simplified)",
+        "zh-TW":"Chinese (Traditional)",
+        "co":"Corsican",
+        "hr":"Croatian",
+        "cs":"Czech",
+        "da":"Danish",
+        "nl":"Dutch",
+        "en":"English",
+        "eo":"Esperanto",
+        "et":"Estonian",
+        "tl":"Filipino",
+        "fi":"Finnish",
+        "fr":"French",
+        "fy":"Frisian",
+        "gl":"Galician",
+        "ka":"Georgian",
+        "de":"German",
+        "el":"Greek",
+        "gu":"Gujarati",
+        "ht":"Haitian Creole",
+        "ha":"Hausa",
+        "haw":"Hawaiian",
+        "he":"Hebrew",
+        "hi":"Hindi",
+        "hmn":"Hmong",
+        "hu":"Hungarian",
+        "is":"Icelandic",
+        "ig":"Igbo",
+        "id":"Indonesian",
+        "ga":"Irish",
+        "it":"Italian",
+        "ja":"Japanese",
+        "jw":"Javanese",
+        "kn":"Kannada",
+        "kk":"Kazakh",
+        "km":"Khmer",
+        "ko":"Korean",
+        "ku":"Kurdish",
+        "ky":"Kyrgyz",
+        "lo":"Lao",
+        "la":"Latin",
+        "lv":"Latvian",
+        "lt":"Lithuanian",
+        "lb":"Luxembourgish",
+        "mk":"Macedonian",
+        "mg":"Malagasy",
+        "ms":"Malay",
+        "ml":"Malayalam",
+        "mt":"Maltese",
+        "mi":"Maori",
+        "mr":"Marathi",
+        "mn":"Mongolian",
+        "my":"Myanmar (Burmese)",
+        "ne":"Nepali",
+        "no":"Norwegian",
+        "or":"Odia",
+        "ps":"Pashto",
+        "fa":"Persian",
+        "pl":"Polish",
+        "pt":"Portuguese",
+        "pa":"Punjabi",
+        "ro":"Romanian",
+        "ru":"Russian",
+        "sm":"Samoan",
+        "gd":"Scots Gaelic",
+        "sr":"Serbian",
+        "st":"Sesotho",
+        "sn":"Shona",
+        "sd":"Sindhi",
+        "si":"Sinhala",
+        "sk":"Slovak",
+        "sl":"Slovenian",
+        "so":"Somali",
+        "es":"Spanish",
+        "su":"Sundanese",
+        "sw":"Swahili",
+        "sv":"Swedish",
+        "tg":"Tajik",
+        "ta":"Tamil",
+        "te":"Telugu",
+        "th":"Thai",
+        "tr":"Turkish",
+        "uk":"Ukrainian",
+        "ur":"Urdu",
+        "ug":"Uyghur",
+        "uz":"Uzbek",
+        "vi":"Vietnamese",
+        "cy":"Welsh",
+        "xh":"Xhosa",
+        "yi":"Yiddish",
+        "yo":"Yoruba",
+        "zu":"Zulu",
+        "ak":"Akan",
+        "as":"Assamese",
+        "ay":"Aymara",
+        "bm":"Bambara",
+        "dv":"Dhivehi",
+        "ee":"Ewe",
+        "gn":"Guarani",
+        "ilo":"Ilocano",
+        "rw":"Kinyarwanda",
+        "ln":"Lingala",
+        "lg":"Luganda",
+        "mai":"Maithili",
+        "om":"Oromo",
+        "qu":"Quechua",
+        "sa":"Sanskrit",
+        "tt":"Tatar",
+        "tk":"Turkmen",
+        "ts":"Tsonga",
+        "wo":"Wolof"
+    }
+});
+            }
         }
+
+        // Simple GTranslate Widget Implementation
+        function GTranslateWidget(config) {
+            this.el = config.el;
+            this.currentLang = config.language || 'en';
+            this.languages = config.languages || {};
+            
+            this.render();
+            this.bindEvents();
+        }
+
+        GTranslateWidget.prototype.render = function() {
+            const container = document.getElementById(this.el);
+            if (!container) return;
+            
+            // Create select dropdown
+            const select = document.createElement('select');
+            select.className = 'gtranslate-select';
+            select.setAttribute('aria-label', 'Select language');
+            
+            // Add options
+            Object.keys(this.languages).forEach(function(code) {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = this.languages[code];
+                if (code === this.currentLang) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }.bind(this));
+            
+            container.innerHTML = '';
+            container.appendChild(select);
+        };
+
+        GTranslateWidget.prototype.bindEvents = function() {
+            const container = document.getElementById(this.el);
+            if (!container) return;
+            
+            const select = container.querySelector('.gtranslate-select');
+            if (!select) return;
+            
+            select.addEventListener('change', function(e) {
+                const lang = e.target.value;
+                if (lang && lang !== this.currentLang) {
+                    this.translatePage(lang);
+                }
+            }.bind(this));
+        };
+
+        GTranslateWidget.prototype.translatePage = function(targetLang) {
+            // Use Google Translate API via iframe or fetch
+            // For free version, we'll use the translate.google.com iframe approach
+            const currentUrl = window.location.href;
+            const translatedUrl = 'https://translate.google.com/translate?sl=auto&tl=' + targetLang + '&u=' + encodeURIComponent(currentUrl);
+            
+            // Open in new tab or redirect
+            window.open(translatedUrl, '_blank');
+            
+            // Alternative: redirect current page
+            // window.location.href = translatedUrl;
+        };
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load GTranslate script
+            initGTranslate();
+            
+            // Also initialize after a short delay to ensure DOM is fully ready
+            setTimeout(initGTranslate, 500);
+        });
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <!-- JavaScript -->
     <script>
@@ -651,8 +895,15 @@ s0.parentNode.insertBefore(s1,s0);
                 });
             }
 
-            setupTranslateToggle('googleTranslateIconDesktop', 'translateDropdownDesktop');
-            setupTranslateToggle('googleTranslateIconMobile', 'translateDropdownMobile');
+            setupTranslateToggle('gtranslateIconDesktop', 'translateDropdownDesktop');
+            setupTranslateToggle('gtranslateIconMobile', 'translateDropdownMobile');
+            
+            // Re-initialize GTranslate when dropdown opens
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('#gtranslateIconDesktop') || e.target.closest('#gtranslateIconMobile')) {
+                    setTimeout(initGTranslate, 100);
+                }
+            });
         });
 
         // Service Worker Registration
