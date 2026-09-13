@@ -38,4 +38,4 @@ RUN chown -R appuser:appuser /code
 USER appuser
 
 # Run the application with gunicorn
-CMD ["gunicorn", "flash_dispatch.wsgi:application", "--bind", "0.0.0.0:8020", "--workers", "2", "--worker-class", "sync"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn flash_dispatch.wsgi:application --bind 0.0.0.0:8020 --workers 2 --worker-class sync"]
