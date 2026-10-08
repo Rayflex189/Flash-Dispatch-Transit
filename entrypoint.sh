@@ -1,12 +1,14 @@
 #!/bin/sh
 set -e
 
-echo "🚀 Starting Flash Dispatch..."
+echo "======================================"
+echo "FLASH DISPATCH STARTUP"
+echo "======================================"
 
-echo "📦 Running migrations..."
+echo "Running database migrations..."
 python manage.py migrate --noinput
 
-echo "👤 Checking superuser..."
+echo "Checking administrator account..."
 
 python manage.py shell <<'PY'
 import os
@@ -18,23 +20,23 @@ username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
 email = os.environ.get("DJANGO_SUPERUSER_EMAIL")
 password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
-if username and email and password:
+if not all([username, email, password]):
+    print("ERROR: Administrator environment variables are missing.")
+else:
     user = User.objects.filter(username=username).first()
 
     if user:
-        print(f"✅ Superuser '{username}' already exists.")
+        print(f"Administrator '{username}' already exists.")
     else:
         User.objects.create_superuser(
             username=username,
             email=email,
-            password=password
+            password=password,
         )
-        print(f"✅ Superuser '{username}' created.")
-else:
-    print("⚠️ Superuser environment variables are not configured.")
+        print(f"SUCCESS: Administrator '{username}' created.")
 PY
 
-echo "🌐 Starting Gunicorn..."
+echo "Starting Gunicorn..."
 
 exec gunicorn flash_dispatch.wsgi:application \
     --bind 0.0.0.0:8020 \
