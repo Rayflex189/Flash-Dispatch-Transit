@@ -26,16 +26,17 @@ COPY flash_dispatch/ .
 # Create necessary directories
 RUN mkdir -p static media staticfiles
 
-# Run migrations (will be done in release command)
-# RUN python manage.py migrate --noinput
-
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
 # Create a non-root user
 RUN adduser --disabled-password --gecos '' appuser
 RUN chown -R appuser:appuser /code
+
+# Make entrypoint executable
+RUN chmod +x /code/entrypoint.sh
+
 USER appuser
 
-# Run the application with gunicorn
-CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn flash_dispatch.wsgi:application --bind 0.0.0.0:8020 --workers 2 --worker-class sync"]
+# Start application
+ENTRYPOINT ["/code/entrypoint.sh"]
