@@ -23,6 +23,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY flash_dispatch/ .
 
+# Copy entrypoint script from repository root
+COPY entrypoint.sh /code/entrypoint.sh
+
 # Create necessary directories
 RUN mkdir -p static media staticfiles
 
