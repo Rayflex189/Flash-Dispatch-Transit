@@ -5,13 +5,14 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', config('SECRET_KEY', default='django-insecure-dev-key-change-in-production'))
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    config('SECRET_KEY', default='django-insecure-dev-key-change-in-production'),
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# --- DEBUG from env, defaults to False in production ---
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-# Allowed hosts for Fly.io
 ALLOWED_HOSTS = [
     'flashdispatchtransit.online',
     'www.flashdispatchtransit.online',
@@ -20,11 +21,11 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://flashdispatchtransit.online',
-                        'https://www.flashdispatchtransit.online',
-                        'https://www.flashdispatchtransit.online'
-                        ]
-# Application definition
+CSRF_TRUSTED_ORIGINS = [
+    'https://flashdispatchtransit.online',
+    'https://www.flashdispatchtransit.online',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,12 +34,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    
-    # Third party apps
+
+    # Third party
+    'cloudinary_storage',   # keep BEFORE staticfiles
     'cloudinary',
-    'cloudinary_storage',
-    
-    # Local apps
+
+    # Local
     'apps.accounts',
     'apps.tracking',
     'apps.dashboard',
@@ -77,17 +78,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'flash_dispatch.wsgi.application'
 
-
-
-# Database Configuration - Parse DATABASE_URL if available, otherwise fallback to SQLite
+# --- Database ---
 DATABASE_URL = os.environ.get('DATABASE_URL', config('DATABASE_URL', default=''))
 
-# Force local sqlite database for local development if PostgreSQL fails, DATABASE_URL is not set, or points to the invalid Supabase pooler
-if DATABASE_URL and DATABASE_URL.startswith('postgresql') and 'aws-0-eu-west-1.pooler.supabase.com' not in DATABASE_URL:
+if DATABASE_URL and DATABASE_URL.startswith('postgresql'):
     try:
-        DATABASES = {
-            'default': dj_database_url.parse(DATABASE_URL)
-        }
+        DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
         DATABASES['default']['OPTIONS'] = {
             'options': '-c default_transaction_read_only=off',
             'client_encoding': 'UTF8',
@@ -108,93 +104,82 @@ else:
         }
     }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+# --- Static ---
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Cloudinary Configuration & Media settings
-CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', config('CLOUDINARY_CLOUD_NAME', default=''))
-CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY', config('CLOUDINARY_API_KEY', default=''))
-CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET', config('CLOUDINARY_API_SECRET', default=''))
-
-# Use Cloudinary only if credentials are set and not in offline/local-only mode
-if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET and config('USE_CLOUDINARY', default='False') == 'True':
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
-        'API_KEY': CLOUDINARY_API_KEY,
-        'API_SECRET': CLOUDINARY_API_SECRET,
-    }
-else:
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
+# --- Media / Cloudinary ---
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+CLOUDINARY_CLOUD_NAME  = os.environ.get('CLOUDINARY_CLOUD_NAME', config('CLOUDINARY_CLOUD_NAME', default=''))
+CLOUDINARY_API_KEY     = os.environ.get('CLOUDINARY_API_KEY',    config('CLOUDINARY_API_KEY',    default=''))
+CLOUDINARY_API_SECRET  = os.environ.get('CLOUDINARY_API_SECRET', config('CLOUDINARY_API_SECRET', default=''))
 
-# Default primary key field type
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': CLOUDINARY_CLOUD_NAME,
+    'API_KEY':    CLOUDINARY_API_KEY,
+    'API_SECRET': CLOUDINARY_API_SECRET,
+    'SECURE': True,
+}
+
+# Use Cloudinary if credentials exist — no extra env flag to forget.
+_use_cloudinary = bool(CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET)
+
+# Django 4.2 — STORAGES is the canonical way
+STORAGES = {
+    "default": {
+        "BACKEND": ("cloudinary_storage.storage.MediaCloudinaryStorage"
+                    if _use_cloudinary
+                    else "django.core.files.storage.FileSystemStorage"),
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Kept for libraries that still read the old name
+DEFAULT_FILE_STORAGE = STORAGES["default"]["BACKEND"]
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Custom user model
 AUTH_USER_MODEL = 'accounts.User'
 
-# Authentication
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL = 'landing:home'
 
-# File upload settings
 FILE_UPLOAD_PERMISSIONS = 0o644
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 
-# Security settings - IMPORTANT: Don't force SSL redirect on Fly.io
-# Fly.io handles SSL termination, so we need to configure properly
-SECURE_SSL_REDIRECT = False  # Fly.io handles SSL
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Important for Fly.io
-SESSION_COOKIE_SECURE = True  # Only send cookies over HTTPS
-CSRF_COOKIE_SECURE = True  # Only send CSRF cookies over HTTPS
-SECURE_BROWSER_XSS_FILTER = True
+# --- Security ---
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
-# Use secure cookies
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-# CSRF Cookie Settings
 CSRF_COOKIE_HTTPONLY = False
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_SAMESITE = 'Lax'
-
-# Session settings
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
-# Email Configuration (optional)
+# --- Email ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
@@ -205,29 +190,13 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'Flash Dispatch <noreply@flashdispatch.com>')
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'contact@flashdispatch.com')
 
-# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
-    },
+    'handlers': {'console': {'class': 'logging.StreamHandler'}},
+    'root': {'handlers': ['console'], 'level': 'INFO'},
     'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'django.security': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
+        'django':          {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'django.security': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
     },
 }
